@@ -1,9 +1,9 @@
 package com.dhivakar.Redirector.Controller;
 
-import org.springframework.web.bind.annotation.PathVariable;
+import com.dhivakar.Redirector.Model.RandomStringGen;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 public class RestService {
@@ -13,11 +13,10 @@ public class RestService {
         return "Hello World";
     }
 
-    @RequestMapping("/get/{url}")
-    public RedirectView Redirect(@PathVariable(name="url") String url)
-    {
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("https://www."+url);
-        return redirectView;
+    @RequestMapping("/fetch/RandomString")
+    public String StringGen(){
+        RandomStringGen randomStringGen= new RandomStringGen();
+            String reURL= randomStringGen.ReURLgen();
+            return reURL;
     }
 }
