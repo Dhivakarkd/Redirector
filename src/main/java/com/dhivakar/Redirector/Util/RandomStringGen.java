@@ -1,4 +1,4 @@
-package com.dhivakar.Redirector.Model;
+package com.dhivakar.Redirector.Util;
 
 import java.util.Random;
 
