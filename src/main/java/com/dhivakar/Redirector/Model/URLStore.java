@@ -1,9 +1,9 @@
 package com.dhivakar.Redirector.Model;
 
 public class URLStore {
-    private int id;
-    private String url;
-    private String reurl;
+    private final int id;
+    private final String url;
+    private final String reurl;
 
     public URLStore(int id, String url, String reurl) {
         this.id = id;
