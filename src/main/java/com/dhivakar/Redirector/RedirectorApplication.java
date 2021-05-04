@@ -8,6 +8,7 @@ public class RedirectorApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(RedirectorApplication.class, args);
+
 	}
 
 }

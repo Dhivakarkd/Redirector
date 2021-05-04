@@ -10,9 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RestService {
 
+
     @RequestMapping("/fetch/{url}")
     public void StringGen(@PathVariable("url") String url){
         URLService urlService = new URLService();
         urlService.urlhandler(url);
+
+    @RequestMapping("/get")
+    public String  HelloWorld(){
+        return "Hello World";
+
     }
 }
