@@ -16,7 +16,7 @@ public class RestService {
     @RequestMapping("/fetch/RandomString")
     public String StringGen(){
         RandomStringGen randomStringGen= new RandomStringGen();
-            String reURL= randomStringGen.ReURLgen();
+            String reURL= randomStringGen.generaor();
             return reURL;
     }
 }

@@ -3,7 +3,7 @@ package com.dhivakar.Redirector.Model;
 import java.util.Random;
 
 public class RandomStringGen {
-    public String ReURLgen()
+    public String generaor()
     {
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmopqrstuvwxyz1234567890";
         StringBuilder sb = new StringBuilder();
