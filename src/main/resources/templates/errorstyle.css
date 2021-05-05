@@ -37,7 +37,7 @@ body {
 }
 @media (max-width: 770px) {
   .background .ground {
-    height: 0vh;
+    height: 0;
   }
 }
 
@@ -54,7 +54,7 @@ body {
 @media (max-width: 770px) {
   .container {
     flex-direction: column;
-    padding-bottom: 0vh;
+    padding-bottom: 0;
   }
 }
 
@@ -84,7 +84,7 @@ body {
   text-align: center;
   font-size: 9em;
   line-height: 1.3em;
-  margin: 2rem 0 0.5rem 0;
+  margin: 2rem 0 0.5rem;
   padding: 0;
   text-shadow: 0 0 1rem #fefefe;
 }
