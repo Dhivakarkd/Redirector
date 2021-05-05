@@ -1,16 +1,18 @@
 package com.dhivakar.Redirector.Service;
 
+import com.dhivakar.Redirector.Dao.DaoService;
 import com.dhivakar.Redirector.Model.URLStore;
 import com.dhivakar.Redirector.Util.RandomStringGen;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class URLService {
 
-    public void urlhandler(String url)
-    {
-    RandomStringGen randomStringGen = new RandomStringGen();
-    String reURL = randomStringGen.generaor();
-    int id = 1;
-    URLStore urlStore = new URLStore(id, url, reURL);
-    id++;
+    @Autowired
+    private DaoService service;
+
+    public URLStore urlhandler(String url) {
+        return new URLStore(url, RandomStringGen.generaor());
     }
+
+
 }
