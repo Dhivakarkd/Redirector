@@ -10,20 +10,9 @@ public class URLService {
     @Autowired
     private DaoService service;
 
-    public void urlhandler(String url)
-    {
-
-
-
-
+    public URLStore urlhandler(String url) {
+        return new URLStore(url, RandomStringGen.generaor());
     }
-    private String saveUrl(String url){
-        String shortval=RandomStringGen.generaor();
-        URLStore data=new URLStore(url,shortval);
-        if(service.saveUrl(data)) {
-            return shortval;
-        }else {
-            return null;
-        }
-    }
+
+
 }

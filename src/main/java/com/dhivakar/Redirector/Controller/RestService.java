@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,10 +22,21 @@ public class RestService {
     DaoService service;
 
 
-    @RequestMapping("/{url}")
-    public void StringGen(@PathVariable("url") String url) {
+    @RequestMapping("/parse")
+    public ResponseEntity<URLStore> StringGen(@RequestParam("url") String url,HttpServletResponse resp) {
         URLService urlService = new URLService();
-        urlService.urlhandler(url);
+        URLStore store= urlService.urlhandler(url);
+        service.saveUrl(store);
+        if(store.getShorturl() != null){
+            return ResponseEntity.status(HttpStatus.CREATED).body(store);
+        }else{
+            try {
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 
