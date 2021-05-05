@@ -3,18 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <title>Redirector</title>
-  <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-<link rel="stylesheet" href="./css/style.css">
+   <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css'><link rel="stylesheet" href="./css/style.css">
 
 </head>
 <body>
 <!-- partial:index.partial.html -->
-<form onsubmit="event.preventDefault();" role="search">
-  <label for="search">Search for stuff</label>
-  <input id="search" type="search" placeholder="Search..." autofocus required />
-  <button type="submit">Shorten</button>
-</form>
+<body>
+  <div class="container">
+      <div id="content">
+        <form class='form-inline'>
+          <div class="input-group">
+            <input type='text' id='search' class="form-control search-form" placeholder="Enter the Url">
+            <span class="input-group-btn" style="width:39px">
+              <button id="search-this"type="button" class="pull-right btn btn-default search-btn">
+                  <p>Short</p>
+<!--                  <i class="fa fa-search"></i>-->
+              </button>
+            </span>
+          </div>
+        </form>
+        
+       
+        
+        
+    </div>
+  </div>
+</body>
 <!-- partial -->
   
 </body>
