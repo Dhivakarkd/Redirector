@@ -1,0 +1,22 @@
+{
+  "name": "redirector",
+  "version": "1.0.0",
+  "description": "Simple Redirector Application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dhivakarkd/Redirector.git"
+  },
+  "keywords": [
+    "api"
+  ],
+  "author": "Dhivakar R M",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dhivakarkd/Redirector/issues"
+  },
+  "homepage": "https://github.com/Dhivakarkd/Redirector#readme"
+}
