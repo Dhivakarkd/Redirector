@@ -1,14 +1,21 @@
-const http = require('http');
+const express = require("express"); 
 
-const hostname = '127.0.0.1';
-const port = 3000;
+const app = express(); 
+const PORT = process.env.PORT || 3000; 
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World');
-});
+let variable = new Map([
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+["youtube","https://www.youtube.com/?gl=IN"],
+["netflix","https://www.netflix.com/browse"]
+
+])
+
+// For testing purposes 
+app.get("/:value", (req, res) => { 
+
+    res.redirect(301, variable.get(req.params.value))
+}); 
+
+app.listen(PORT, () => { 
+    console.log(`API is listening on port ${PORT}`); 
 });

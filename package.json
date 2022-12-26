@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/Dhivakarkd/Redirector/issues"
   },
-  "homepage": "https://github.com/Dhivakarkd/Redirector#readme"
+  "homepage": "https://github.com/Dhivakarkd/Redirector#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
