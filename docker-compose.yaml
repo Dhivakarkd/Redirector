@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  web:
+    restart: on-failure
+    build: ./web
+    hostname: web
+    ports:
+      - '80:4040'
+
+ #TODO Check if we really need NGINX     
+  # nginx:
+  #   build: ./nginx
+  #   ports:
+  #   - '80:80'
+  #   depends_on:
+  #   - web
