@@ -1,6 +1,16 @@
 version: '2'
 
 services:
+
+  cache:
+    image: redis:7.0.7-alpine
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes: 
+      - cache:/data
+
   web:
     container_name: redirector
     image: dhivakarkd/redirector:latest
@@ -9,6 +19,8 @@ services:
     restart: unless-stopped
     ports:
       - '80:4040'
+    depends_on:
+      - cache
 
  #TODO Check if we really need NGINX     
   # nginx:
@@ -17,3 +29,7 @@ services:
   #   - '80:80'
   #   depends_on:
   #   - web
+
+volumes:
+  cache:
+    driver: local
