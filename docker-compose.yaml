@@ -2,9 +2,11 @@ version: '2'
 
 services:
   web:
-    restart: on-failure
-    build: ./web
-    hostname: web
+    container_name: redirector
+    image: dhivakarkd/redirector:latest
+    mem_limit: 50m
+    mem_reservation: 40M
+    restart: unless-stopped
     ports:
       - '80:4040'
 
