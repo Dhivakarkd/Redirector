@@ -1,26 +1,31 @@
-version: '2'
+version: '3'
 
 services:
 
-  cache:
+  redis:
+    container_name: redis
     image: redis:7.0.7-alpine
     restart: unless-stopped
     ports:
       - '6379:6379'
-    command: redis-server --save 20 1 --loglevel warning
     volumes: 
-      - cache:/data
+      - redis-server:/data
 
   web:
     container_name: redirector
-    image: dhivakarkd/redirector:latest
+    #image: dhivakarkd/redirector:latest
+    build: ./web
     mem_limit: 50m
     mem_reservation: 40M
     restart: unless-stopped
     ports:
       - '80:4040'
     depends_on:
-      - cache
+      - redis
+    links:
+      - redis
+    environment:
+      - REDIS_URL=redis://redis
 
  #TODO Check if we really need NGINX     
   # nginx:
@@ -31,5 +36,5 @@ services:
   #   - web
 
 volumes:
-  cache:
+  redis-server:
     driver: local
