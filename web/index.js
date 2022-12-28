@@ -19,14 +19,22 @@ let redisClient;
     await redisClient.connect();
 })();
 
-ap
 app.use(express.json());
 
 app.get("/:value", async (req, res) => {
     console.log("value is " + req.params.value);
     const value = await redisClient.get(req.params.value)
-    console.log(value);
-    res.send(200, value);
+
+    if(!Object.is(value,null)){
+        console.log(value);
+
+        res.redirect(301, value);
+
+    }else{
+
+        res.send(500,"No Object Mapped")
+    }
+
     /*     redisClient.get(req.params.value, (err, reply) => {
         if (err) throw err;
     console.log("Value is "+reply)
@@ -46,7 +54,6 @@ app.get("/nothing/no", async (req, res) => {
     console.log("Inside nothing")
 
     await redisClient.keys('*', function (err, keys) {
-        if (err) return console.log(err);
 
         for (var i = 0, len = keys.length; i < len; i++) {
             console.log(keys[i]);
