@@ -1,8 +1,15 @@
 module.exports = {
-    isValidUrl: isValidUrl
-  };
+  isValidUrl: isValidUrl,
+  isNullOrEmpty: isNullOrEmpty,
+};
+
+const url = require('url');
 
 function isValidUrl(inputUrl) {
-    const urlRegex = /^[\w.-]+(?:\.[\w\.-]+)?(?=.{1,2048}$)[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
-    return urlRegex.test(inputUrl);
-  }
+  const parsedUrl = url.parse(inputUrl);
+  return parsedUrl !== null && parsedUrl.hostname !== null;
+}
+
+function isNullOrEmpty(input) {
+  return input === null || input === "";
+}

@@ -1,9 +1,11 @@
 const express = require("express");
+const rateLimit = require('express-rate-limit');
+
 
 const app = express();
 const PORT = process.env.PORT || 4040;
 const redis = require("redis");
-const {isValidUrl} = require("./Helper.js")
+const {isValidUrl,isNullOrEmpty} = require("./Helper.js")
 
 let variable = new Map([
   ["youtube", "https://www.youtube.com/?gl=IN"],
@@ -11,6 +13,15 @@ let variable = new Map([
   ["git", "https://github.com/Dhivakarkd?tab=repositories"],
 ]);
 let redisClient;
+
+const apiLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+})
+
+app.use(express.json());
+
 
 (async () => {
   redisClient = redis.createClient({ url: process.env.REDIS_URL });
@@ -20,9 +31,9 @@ let redisClient;
   await redisClient.connect();
 })();
 
-app.use(express.json());
 
-app.get("/:value", async (req, res) => {
+
+app.get("/:value", apiLimiter,async (req, res) => {
   console.log("value is " + req.params.value);
   const value = await redisClient.get(req.params.value);
 
@@ -42,10 +53,10 @@ app.get("/:value", async (req, res) => {
       }); */
 });
 
-app.post("/add/insert", async (req, res) => {
+app.post("/add/insert",apiLimiter, async (req, res) => {
   console.log(`API is listening on get /add`);
 
-  if (isValidUrl(req.body.value)) {
+  if (isValidUrl(req.body.value) && isNullOrEmpty(req.body.key)) {
     console.log(req.body.value);
     await redisClient.set(req.body.key, req.body.value);
     res.send(200, req.body);
@@ -54,16 +65,6 @@ app.post("/add/insert", async (req, res) => {
     res.send(400,"Bad Request");
 
   }
-});
-
-app.get("/nothing/no", async (req, res) => {
-  console.log("Inside nothing");
-
-  await redisClient.keys("*", function (err, keys) {
-    for (var i = 0, len = keys.length; i < len; i++) {
-      console.log(keys[i]);
-    }
-  });
 });
 
 app.listen(PORT, () => {
