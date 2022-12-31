@@ -1,5 +1,6 @@
 const express = require("express");
 const rateLimit = require('express-rate-limit');
+const validator = require('validator');
 
 
 const app = express();
@@ -59,7 +60,7 @@ app.post("/add/insert",apiLimiter, async (req, res) => {
   let userKey = req.body.key;
   let userValue = req.body.value;
 
-  if (isValidUrl(userValue) && isNullOrEmpty(userKey)) {
+  if (validator.isURL(userValue) && isNullOrEmpty(userKey)) {
     console.log(userValue);
     await redisClient.set(userKey, userValue);
     res.send(200, "Inserted Data Value");
