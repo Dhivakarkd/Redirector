@@ -56,10 +56,13 @@ app.get("/:value", apiLimiter,async (req, res) => {
 app.post("/add/insert",apiLimiter, async (req, res) => {
   console.log(`API is listening on get /add`);
 
-  if (isValidUrl(req.body.value) && isNullOrEmpty(req.body.key)) {
-    console.log(req.body.value);
-    await redisClient.set(req.body.key, req.body.value);
-    res.send(200, req.body);
+  let userKey = req.body.key;
+  let userValue = req.body.value;
+
+  if (isValidUrl(userValue) && isNullOrEmpty(userKey)) {
+    console.log(userValue);
+    await redisClient.set(userKey, userValue);
+    res.send(200, "Inserted Data Value");
   }else{
 
     res.send(400,"Bad Request");
