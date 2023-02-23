@@ -1,19 +1,39 @@
-version: '2'
+version: "3"
 
 services:
+  redis:
+    container_name: redis
+    image: redis:7.0.7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-server:/data
+
   web:
     container_name: redirector
-    image: dhivakarkd/redirector:latest
+    #image: dhivakarkd/redirector:latest
+    build: ./web
     mem_limit: 50m
     mem_reservation: 40M
     restart: unless-stopped
     ports:
-      - '80:4040'
+      - "80:4040"
+    depends_on:
+      - redis
+    links:
+      - redis
+    environment:
+      - REDIS_URL=redis://redis
 
- #TODO Check if we really need NGINX     
+  #TODO Check if we really need NGINX
   # nginx:
   #   build: ./nginx
   #   ports:
   #   - '80:80'
   #   depends_on:
   #   - web
+
+volumes:
+  redis-server:
+    driver: local

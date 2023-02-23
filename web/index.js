@@ -1,22 +1,76 @@
-const express = require("express"); 
+const express = require("express");
+const rateLimit = require('express-rate-limit');
+const validator = require('validator');
 
-const app = express(); 
-const PORT = process.env.PORT || 4040; 
+
+const app = express();
+const PORT = process.env.PORT || 4040;
+const redis = require("redis");
+const {isValidUrl,isNullOrEmpty} = require("./Helper.js")
 
 let variable = new Map([
+  ["youtube", "https://www.youtube.com/?gl=IN"],
+  ["netflix", "https://www.netflix.com/browse"],
+  ["git", "https://github.com/Dhivakarkd?tab=repositories"],
+]);
+let redisClient;
 
-["youtube","https://www.youtube.com/?gl=IN"],
-["netflix","https://www.netflix.com/browse"],
-["git","https://github.com/Dhivakarkd?tab=repositories"]
+const apiLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+})
 
-])
+app.use(express.json());
 
-// For testing purposes 
-app.get("/:value", (req, res) => { 
 
-    res.redirect(301, variable.get(req.params.value))
-}); 
+(async () => {
+  redisClient = redis.createClient({ url: process.env.REDIS_URL });
 
-app.listen(PORT, () => { 
-    console.log(`API is listening on port ${PORT}`); 
+  redisClient.on("error", (error) => console.error(`Error : ${error}`));
+
+  await redisClient.connect();
+})();
+
+
+
+app.get("/:value", apiLimiter,async (req, res) => {
+  console.log("value is " + req.params.value);
+  const value = await redisClient.get(req.params.value);
+
+  if (!Object.is(value, null)) {
+    console.log(value);
+
+    res.redirect(301, value);
+  } else {
+    res.send(500, "No Object Mapped");
+  }
+
+  /*     redisClient.get(req.params.value, (err, reply) => {
+        if (err) throw err;
+    console.log("Value is "+reply)
+        res.send(200, reply);
+        // res.redirect(301, reply);
+      }); */
+});
+
+app.post("/add/insert",apiLimiter, async (req, res) => {
+  console.log(`API is listening on get /add`);
+
+  let userKey = req.body.key;
+  let userValue = req.body.value;
+
+  if (validator.isURL(userValue) && isNullOrEmpty(userKey)) {
+    console.log(userValue);
+    await redisClient.set(userKey, userValue);
+    res.send(200, "Inserted Data Value");
+  }else{
+
+    res.send(400,"Bad Request");
+
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`API is listening on port ${PORT}`);
 });
