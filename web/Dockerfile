@@ -7,5 +7,5 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY ./index.js ./Helper.js ./
-
+COPY ./public ./
 CMD ["npm","start"]
