@@ -41,29 +41,29 @@ app.get("/:value", apiLimiter, async (req, res) => {
 app.post("/add/insert", apiLimiter, async (req, res) => {
   console.log(`API is listening on get /add`);
 
-  let userKey = req.body.key;
-  let userValue = req.body.value;
+  let keyName = req.body.key;
+  let UrlPath = req.body.value;
 
-  console.log("Key value is ", userKey);
-  console.log("Value value is ", userValue);
-  console.log("Url is ", validator.isURL(userValue));
-  console.log("Key check ", isNullOrEmpty(userKey));
+  console.log("Key value is ", keyName);
+  console.log("Value value is ", UrlPath);
+  console.log("Url is ", validator.isURL(UrlPath));
+  console.log("Key check ", isNullOrEmpty(keyName));
 
-  if (validator.isURL(userValue) && !isNullOrEmpty(userKey)) {
-    console.log(userValue);
-    await redisClient.set(userKey, userValue);
+  if (validator.isURL(UrlPath) && !isNullOrEmpty(keyName)) {
+    console.log(UrlPath);
+    await redisClient.set(keyName, UrlPath);
     console.log(
-      `Successfully inserted key '${userKey}'/value : '${userValue}' pair in Redis.`
+      `Successfully inserted key '${keyName}'/value : '${UrlPath}' pair in Redis.`
     );
     res
       .status(200)
       .send(
-        `Successfully inserted key \n '${userKey}' value : '${userValue}' \n pair in Redis.`
+        `Successfully inserted key \n '${keyName}' value : '${UrlPath}' \n pair in Redis.`
       );
   } else {
     res
       .status(400)
-      .send(`Bad Request - key : '${userKey}'/value : '${userValue}'`);
+      .send(`Bad Request - key : '${keyName}'/value : '${UrlPath}'`);
   }
 });
 
