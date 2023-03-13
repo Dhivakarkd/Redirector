@@ -9,13 +9,20 @@ const { isValidUrl, isNullOrEmpty } = require("./Helper.js");
 
 let redisClient;
 
+app.set('view engine', 'ejs');
+
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 });
+// parse application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: false }))
+     
+// parse application/json
+app.use(express.json())
 
-app.use(express.json());
+app.use(express.static('public'));
 
 (async () => {
   redisClient = redis.createClient({ url: process.env.REDIS_URL });
@@ -24,6 +31,14 @@ app.use(express.json());
 
   await redisClient.connect();
 })();
+
+// Render the form page
+app.get("/main/home", (req, res) => {
+  const defaults = {
+    key: res.body.value,
+  };
+  res.render('form', { defaults });
+});
 
 app.get("/:value", apiLimiter, async (req, res) => {
   console.log("value is " + req.params.value);
@@ -34,7 +49,12 @@ app.get("/:value", apiLimiter, async (req, res) => {
 
     res.redirect(301, value);
   } else {
-    res.status(500).send("No Object Mapped");
+    const defaults = {
+      value : req.params.value,
+    };
+
+    console.log(defaults)
+    res.render('form', { defaults });
   }
 });
 
@@ -42,7 +62,7 @@ app.post("/add/insert", apiLimiter, async (req, res) => {
   console.log(`API is listening on get /add`);
 
   let keyName = req.body.key;
-  let UrlPath = req.body.value;
+  let UrlPath = req.body.url;
 
   console.log("Key value is ", keyName);
   console.log("Value value is ", UrlPath);

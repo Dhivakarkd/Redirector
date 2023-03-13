@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home Lab Index</title>
+  <link rel="stylesheet" href="/views/css/style.css">
+</head>
+<body>
+  <h1>Home Lab Index</h1>
+  <h2>No Key/Value Pair Found , Please Add the Url</h2>
+  <form method="POST" action="/add/insert">
+    <label for="key">Key : </label>
+    <input type="text" name="key" id="key" value="<%= defaults.value %>" required><br>
+    
+    <label for="url">Add your Url :</label>
+    <input type="url" name="url" id="url" value="" required><br>
+      
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
