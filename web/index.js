@@ -7,11 +7,6 @@ const PORT = process.env.PORT || 4040;
 const redis = require("redis");
 const { isValidUrl, isNullOrEmpty } = require("./Helper.js");
 
-let variable = new Map([
-  ["youtube", "https://www.youtube.com/?gl=IN"],
-  ["netflix", "https://www.netflix.com/browse"],
-  ["git", "https://github.com/Dhivakarkd?tab=repositories"],
-]);
 let redisClient;
 
 const apiLimiter = rateLimit({
@@ -39,15 +34,8 @@ app.get("/:value", apiLimiter, async (req, res) => {
 
     res.redirect(301, value);
   } else {
-    res.send(500, "No Object Mapped");
+    res.status(500).send("No Object Mapped");
   }
-
-  /*     redisClient.get(req.params.value, (err, reply) => {
-        if (err) throw err;
-    console.log("Value is "+reply)
-        res.send(200, reply);
-        // res.redirect(301, reply);
-      }); */
 });
 
 app.post("/add/insert", apiLimiter, async (req, res) => {
@@ -64,11 +52,25 @@ app.post("/add/insert", apiLimiter, async (req, res) => {
   if (validator.isURL(userValue) && !isNullOrEmpty(userKey)) {
     console.log(userValue);
     await redisClient.set(userKey, userValue);
-    console.log(`Successfully inserted key/value pair in Redis.`);
-    res.status(200).send(`Successfully inserted key/value pair in Redis.`);
+    console.log(
+      `Successfully inserted key '${userKey}'/value : '${userValue}' pair in Redis.`
+    );
+    res
+      .status(200)
+      .send(
+        `Successfully inserted key \n '${userKey}' value : '${userValue}' \n pair in Redis.`
+      );
   } else {
-    res.send(400, "Bad Request");
+    res
+      .status(400)
+      .send(`Bad Request - key : '${userKey}'/value : '${userValue}'`);
   }
+});
+
+app.delete("/remove/:keyName", apiLimiter, async (req, res) => {
+  const { keyName } = req.params;
+  redisClient.del(keyName);
+  res.status(200).send(`Deleted ${keyName} key`);
 });
 
 app.listen(PORT, () => {
