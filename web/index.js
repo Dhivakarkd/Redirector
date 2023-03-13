@@ -1,12 +1,11 @@
 const express = require("express");
-const rateLimit = require('express-rate-limit');
-const validator = require('validator');
-
+const rateLimit = require("express-rate-limit");
+const validator = require("validator");
 
 const app = express();
 const PORT = process.env.PORT || 4040;
 const redis = require("redis");
-const {isValidUrl,isNullOrEmpty} = require("./Helper.js")
+const { isValidUrl, isNullOrEmpty } = require("./Helper.js");
 
 let variable = new Map([
   ["youtube", "https://www.youtube.com/?gl=IN"],
@@ -16,13 +15,12 @@ let variable = new Map([
 let redisClient;
 
 const apiLimiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-})
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+});
 
 app.use(express.json());
-
 
 (async () => {
   redisClient = redis.createClient({ url: process.env.REDIS_URL });
@@ -32,9 +30,7 @@ app.use(express.json());
   await redisClient.connect();
 })();
 
-
-
-app.get("/:value", apiLimiter,async (req, res) => {
+app.get("/:value", apiLimiter, async (req, res) => {
   console.log("value is " + req.params.value);
   const value = await redisClient.get(req.params.value);
 
@@ -54,20 +50,24 @@ app.get("/:value", apiLimiter,async (req, res) => {
       }); */
 });
 
-app.post("/add/insert",apiLimiter, async (req, res) => {
+app.post("/add/insert", apiLimiter, async (req, res) => {
   console.log(`API is listening on get /add`);
 
   let userKey = req.body.key;
   let userValue = req.body.value;
 
-  if (validator.isURL(userValue) && isNullOrEmpty(userKey)) {
+  console.log("Key value is ", userKey);
+  console.log("Value value is ", userValue);
+  console.log("Url is ", validator.isURL(userValue));
+  console.log("Key check ", isNullOrEmpty(userKey));
+
+  if (validator.isURL(userValue) && !isNullOrEmpty(userKey)) {
     console.log(userValue);
     await redisClient.set(userKey, userValue);
-    res.send(200, "Inserted Data Value");
-  }else{
-
-    res.send(400,"Bad Request");
-
+    console.log(`Successfully inserted key/value pair in Redis.`);
+    res.status(200).send(`Successfully inserted key/value pair in Redis.`);
+  } else {
+    res.send(400, "Bad Request");
   }
 });
 
