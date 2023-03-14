@@ -84,14 +84,14 @@ app.post("/add/insert", apiLimiter, async (req, res) => {
   if (validator.isURL(UrlPath) && !isNullOrEmpty(keyName)) {
     console.log(UrlPath);
     await redisClient.set(keyName, UrlPath);
+    const defaults = {
+      key:req.body.key,
+      value: req.body.url,
+    };
     console.log(
       `Successfully inserted key '${keyName}'/value : '${UrlPath}' pair in Redis.`
     );
-    res
-      .status(200)
-      .send(
-        `Successfully inserted key \n '${keyName}' value : '${UrlPath}' \n pair in Redis.`
-      );
+    res.render("success",{defaults});
   } else {
     res
       .status(400)
@@ -102,6 +102,7 @@ app.post("/add/insert", apiLimiter, async (req, res) => {
 app.delete("/remove/:keyName", apiLimiter, async (req, res) => {
   const { keyName } = req.params;
   redisClient.del(keyName);
+  console.log(`Deleted ${keyName} key`);
   res.status(200).send(`Deleted ${keyName} key`);
 });
 

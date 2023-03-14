@@ -4,16 +4,16 @@ body {
 }
 
 h1 {
-  font-size: 36px;
   text-align: center;
+  font-size: 36px;
   margin-top: 40px;
 }
 
 h2 {
-  font-size: 24px;
+  font-size: 18px;
   text-align: center;
   margin-top: 20px;
-  color: #ff0000;
+  color: #313131;
 }
 
 form {
@@ -57,4 +57,40 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #0069d9;
+}
+
+.button {
+  display: inline;
+  background-color: #4CAF50;
+  color: #ffffff;
+  margin-top: 4px;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #3e8e41;
+}
+
+
+.icon {
+  display: inline-block;
+  font-size: 24px;
+  margin-right: 10px;
+  margin-bottom: -5px;
+}
+
+.result-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+   background-color: #ffffff;
+  padding: 20px;
 }
