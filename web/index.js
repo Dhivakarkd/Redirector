@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: false }));
 // parse application/json
 app.use(express.json());
 
-app.use(express.static("public"));
+app.use(express.static("views"));
 
 (async () => {
   redisClient = redis.createClient({ url: process.env.REDIS_URL });
