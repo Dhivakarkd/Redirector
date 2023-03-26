@@ -19,7 +19,7 @@ const apiLimiter = rateLimit({
 
 function checkRedisConnection(req, res, next) {
   console.log("Health Check");
-  //FIXME : Fix Error handling for health check 
+  //FIXME : Fix Error handling for health check
   redisClient.ping((err, result) => {
     if (err) {
       res.status(500).send("Redis connection error");
@@ -63,6 +63,11 @@ app.get("/:value", apiLimiter, async (req, res) => {
   } else {
     const defaults = {
       value: req.params.value,
+      dropdownValues: [
+        "\u26A1 General",
+        "\uD83D\uDD17 Quick Links",
+        "\uD83D\uDCA1 Websites",
+      ],
     };
 
     console.log(defaults);
@@ -85,13 +90,13 @@ app.post("/add/insert", apiLimiter, async (req, res) => {
     console.log(UrlPath);
     await redisClient.set(keyName, UrlPath);
     const defaults = {
-      key:req.body.key,
+      key: req.body.key,
       value: req.body.url,
     };
     console.log(
       `Successfully inserted key '${keyName}'/value : '${UrlPath}' pair in Redis.`
     );
-    res.render("success",{defaults});
+    res.render("success", { defaults });
   } else {
     res
       .status(400)

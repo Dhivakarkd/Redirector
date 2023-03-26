@@ -94,3 +94,19 @@ button[type="submit"]:hover {
    background-color: #ffffff;
   padding: 20px;
 }
+
+/* Style the dropdown */
+select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Style the selected option */
+select option:checked {
+  background-color: #007bff;
+  color: #fff;
+}
