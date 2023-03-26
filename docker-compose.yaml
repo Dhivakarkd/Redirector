@@ -1,41 +1,28 @@
 version: "3"
 
 services:
-  redis:
-    container_name: redis
-    image: redis:7.0.7-alpine
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-server:/data
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
-      interval: 5m
-      timeout: 10s
-      retries: 3  
-
   web:
     container_name: redirector
-    image: dhivakarkd/redirector:latest
+    #image: dhivakarkd/redirector:latest
     build: ./web
     mem_limit: 50m
     mem_reservation: 40M
     restart: unless-stopped
     ports:
       - "80:4040"
-    depends_on:
-      - redis
-    links:
-      - redis
-    environment:
-      - REDIS_URL=redis://redis
-    healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://localhost:4040/get/healthcheck || exit 1"]
-      interval: 1m
-      timeout: 10s
-      retries: 2      
+    volumes:
+      - redirector-data:/app/db
+
+    # healthcheck:
+    #   test:
+    #     [
+    #       "CMD-SHELL",
+    #       "curl --fail http://localhost:4040/get/healthcheck || exit 1",
+    #     ]
+    #   interval: 1m
+    #   timeout: 10s
+    #   retries: 2
 
 volumes:
-  redis-server:
+  redirector-data:
     driver: local

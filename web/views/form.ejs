@@ -26,8 +26,7 @@
         </option>
         <% } %>
     </select>
-    <input type="text" name="customValue" id="customValue" placeholder="Enter Custom Category" style="display: none;"
-      required>
+    <input type="text" name="customValue" id="customValue" placeholder="Enter Custom Category" style="display: none;">
     <label for=" key">Key &#128273;</label>
     <input type="text" name="key" id="key" value="<%= defaults.value %>" required>
     <label for="url">URL &#128279;</label>
@@ -48,8 +47,10 @@
   dropdown.addEventListener('change', function () {
     if (dropdown.value.includes('Custom')) {
       customValue.style.display = 'block';
+      customValue.setAttribute('required', '');
     } else {
       customValue.style.display = 'none';
+      customValue.removeAttribute('required');
     }
   });
 </script>
