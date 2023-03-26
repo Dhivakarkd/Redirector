@@ -223,3 +223,4 @@ dist
 
 # Built Visual Studio Code Extensions
 *.vsix
+web/db/database.db
