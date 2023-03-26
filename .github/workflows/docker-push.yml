@@ -21,4 +21,4 @@ jobs:
         with:
           context: "{{defaultContext}}:web"
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/redirector:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/redirector:latest,${{ secrets.DOCKERHUB_USERNAME }}/redirector:1.0.0
