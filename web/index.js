@@ -67,6 +67,7 @@ app.get("/:value", apiLimiter, async (req, res) => {
         "\u26A1 General",
         "\uD83D\uDD17 Quick Links",
         "\uD83D\uDCA1 Websites",
+        "\u{1F520} Custom",
       ],
     };
 

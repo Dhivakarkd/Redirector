@@ -26,10 +26,10 @@
         </option>
         <% } %>
     </select>
-
-    <label for="key">Key &#128273;</label>
-    <input type="text" name="key" id="key" value="<%= defaults.value %>" required><br>
-
+    <input type="text" name="customValue" id="customValue" placeholder="Enter Custom Category" style="display: none;"
+      required>
+    <label for=" key">Key &#128273;</label>
+    <input type="text" name="key" id="key" value="<%= defaults.value %>" required>
     <label for="url">URL &#128279;</label>
     <input type="url" name="url" id="url" value="" required><br>
 
@@ -40,5 +40,18 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<script>
+  var dropdown = document.getElementById('dropdown');
+  var customValue = document.getElementById('customValue');
+
+  // Show the custom value input field when the "Custom" option is selected
+  dropdown.addEventListener('change', function () {
+    if (dropdown.value.includes('Custom')) {
+      customValue.style.display = 'block';
+    } else {
+      customValue.style.display = 'none';
+    }
+  });
+</script>
 
 </html>
