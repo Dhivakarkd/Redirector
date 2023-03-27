@@ -4,8 +4,11 @@ const validator = require("validator");
 const dbUtils = require("./dbUtils");
 const db = require("./database").db;
 const categoryCache = require("./database").getCategories;
+var favicon = require("serve-favicon");
+var path = require("path");
 
 const app = express();
+app.use(favicon(path.join(__dirname, "views/images", "favicon.ico")));
 const PORT = process.env.PORT || 4040;
 const redis = require("redis");
 const { isValidUrl, isNullOrEmpty } = require("./Helper.js");
