@@ -90,32 +90,15 @@ app.get("/get/all", apiLimiter, (req, res) => {
 
 // GET route for the EJS page
 app.get("/view/indexes", apiLimiter, (req, res) => {
-  // const categories = ["ALL"];
-  // dbUtils.getUrlByCategory("ALL",(error,categories)=>{
-  //   if (err) {
-  //     return console.error(err.message);
-  //   }
-  // })
-  const sql = "SELECT * FROM urls ORDER BY created_timestamp DESC";
+  // get all categories from the database
+  let categories = categoryCache();
 
-  // execute the SQL query to get all records
-  db.all(sql, [], (err, rows) => {
-    if (err) {
-      return console.error(err.message);
-    }
+  categories.pop(); // remove the last element ("Custom")
+  categories.push("ALL"); // add "ALL" to the end of the array
 
-    // get all categories from the database
-    const categories = ["ALL"];
-    rows.forEach((row) => {
-      if (!categories.includes(row.category)) {
-        categories.push(row.category);
-      }
-    });
-
-    let selectedCategory;
-    // render the EJS page with the rows and categories data
-    res.render("Categories", { rows, categories, selectedCategory });
-  });
+  let selectedCategory;
+  // render the EJS page with the rows and categories data
+  res.render("Categories", { categories, selectedCategory });
 });
 
 app.get("/get/urls", apiLimiter, (req, res) => {
