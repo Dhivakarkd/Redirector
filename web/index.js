@@ -52,7 +52,7 @@ app.get("/:value", apiLimiter, (req, res) => {
   dbUtils.getUrlByKey(req.params.value, (err, data) => {
     if (err) {
       console.error(err.message);
-      res.status(500).send(err.message);
+      res.status(500).send("Internal Server Error");
     }
     if (!Object.is(data, null)) {
       console.log(req.params.value);
