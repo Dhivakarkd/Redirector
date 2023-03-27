@@ -26,8 +26,8 @@ function fetchDataAndUpdateTable(category) {
         const categoryCell = newRow.insertCell();
         categoryCell.textContent = row.category;
 
-        const expiryDateCell = newRow.insertCell();
-        expiryDateCell.textContent = row.expiry_date;
+        // const expiryDateCell = newRow.insertCell();
+        // expiryDateCell.textContent = row.expiry_date;
 
         const createdTimestampCell = newRow.insertCell();
         createdTimestampCell.textContent = row.created_timestamp;

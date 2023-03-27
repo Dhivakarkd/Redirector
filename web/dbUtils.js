@@ -3,6 +3,9 @@ const updateCategoriesCache = require("./database").updateCategoriesCache;
 const { Url, mapRowToUrl } = require("./models/Url");
 const { Category } = require("./models/Category");
 
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+
 function rowsToJSON(rows) {
   // Convert rows to JSON string
   const jsonString = JSON.stringify(rows);
