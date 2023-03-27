@@ -107,7 +107,7 @@ app.get("/get/urls", apiLimiter, (req, res) => {
   dbUtils.getUrlByCategory(category, (err, urls) => {
     if (err) {
       console.error(err.message);
-      res.status(500).send(err.message);
+      res.status(500).send("Internal Server Error");
     } else {
       res.status(200).send(urls);
     }
@@ -139,7 +139,7 @@ app.post("/add/insert", apiLimiter, (req, res) => {
     dbUtils.insertUrl(urlData, (err, data) => {
       if (err) {
         console.error(err.message);
-        res.status(500).send(err.message);
+        res.status(500).send("Internal Server Error");
       } else {
         const defaults = {
           key: data.key,

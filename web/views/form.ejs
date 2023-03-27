@@ -71,7 +71,7 @@
 
   keyInput.addEventListener('input', (event) => {
     const newValue = event.target.value;
-    link.href = `http://go/${newValue}`;
+    link.href = `http://go/${encodeURIComponent(newValue)}`;
     link.innerText = `Sample\u{1F517}: go/${newValue}`;
   });
 </script>
