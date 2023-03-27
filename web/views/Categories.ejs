@@ -71,7 +71,11 @@
                     keyCell.textContent = row.key;
 
                     const urlCell = newRow.insertCell();
-                    urlCell.textContent = row.url;
+                    const urlLink = document.createElement("a"); // create a new anchor tag
+                    urlLink.href = row.url; // set the href attribute to the URL
+                    urlLink.target = "_blank"; // set the target attribute to "_blank" to open the link in a new tab
+                    urlLink.textContent = row.url; // set the text content of the anchor tag to the URL
+                    urlCell.appendChild(urlLink);
 
                     const categoryCell = newRow.insertCell();
                     categoryCell.textContent = row.category;
