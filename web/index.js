@@ -26,12 +26,21 @@ app.use(express.urlencoded({ extended: false }));
 // parse application/json
 app.use(express.json());
 
-app.use(express.static("views"));
+app.use(
+  express.static("views", {
+    setHeaders: (res, path) => {
+      if (path.endsWith(".js")) {
+        res.setHeader("Content-Type", "text/javascript");
+      }
+    },
+  })
+);
 
 // Render the form page
 app.get("/main/home", (req, res) => {
   const defaults = {
-    key: res.body.value,
+    value: res.body?.value || null,
+    dropdownValues: categoryCache(),
   };
   res.render("form", { defaults });
 });
@@ -78,6 +87,50 @@ app.get("/get/all", apiLimiter, (req, res) => {
     }
   );
 });
+
+// GET route for the EJS page
+app.get("/view/indexes", apiLimiter, (req, res) => {
+  // const categories = ["ALL"];
+  // dbUtils.getUrlByCategory("ALL",(error,categories)=>{
+  //   if (err) {
+  //     return console.error(err.message);
+  //   }
+  // })
+  const sql = "SELECT * FROM urls ORDER BY created_timestamp DESC";
+
+  // execute the SQL query to get all records
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      return console.error(err.message);
+    }
+
+    // get all categories from the database
+    const categories = ["ALL"];
+    rows.forEach((row) => {
+      if (!categories.includes(row.category)) {
+        categories.push(row.category);
+      }
+    });
+
+    let selectedCategory;
+    // render the EJS page with the rows and categories data
+    res.render("Categories", { rows, categories, selectedCategory });
+  });
+});
+
+app.get("/get/urls", apiLimiter, (req, res) => {
+  const category = req.query.category;
+
+  dbUtils.getUrlByCategory(category, (err, urls) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send(err.message);
+    } else {
+      res.status(200).send(urls);
+    }
+  });
+});
+
 app.post("/add/insert", apiLimiter, (req, res) => {
   console.log(`API is listening on get /add`);
 

@@ -1,6 +1,6 @@
 const db = require("./database").db;
 const updateCategoriesCache = require("./database").updateCategoriesCache;
-const { Url } = require("./models/Url");
+const { Url, mapRowToUrl } = require("./models/Url");
 const { Category } = require("./models/Category");
 
 function rowsToJSON(rows) {
@@ -11,6 +11,25 @@ function rowsToJSON(rows) {
   const jsonObject = JSON.parse(jsonString);
 
   return jsonObject;
+}
+
+function getUrlByCategory(category, callback) {
+  let sql = "SELECT * FROM urls";
+  const params = [];
+
+  if (category !== "ALL") {
+    sql += " WHERE category = ?";
+    params.push(category);
+  }
+
+  db.all(sql, params, (err, rows) => {
+    if (err) {
+      callback(err);
+    } else {
+      const urls = rows.map((row) => mapRowToUrl(row));
+      callback(null, urls);
+    }
+  });
 }
 
 function getUrlByKey(key, callback) {
@@ -81,4 +100,4 @@ function insertNewUrl(key, url, category, callback) {
   );
 }
 
-module.exports = { rowsToJSON, getUrlByKey, insertUrl };
+module.exports = { rowsToJSON, getUrlByKey, insertUrl, getUrlByCategory };
