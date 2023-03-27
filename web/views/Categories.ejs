@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>List of URLs</title>
+
+    <link rel="stylesheet" href="/css/Category.css">
+    <link rel="stylesheet" href="/css/Header.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="home-lab-index">
+            <h1>
+                &#127969; Home Lab Index
+            </h1>
+        </div>
+        <div class="btn-container">
+            <button onclick="window.location.href='/main/home'">Add Link</button>
+            <button onclick="window.location.href='/view/indexes'">Indexes</button>
+        </div>
+    </header>
+    <div class="select-container">
+        <label for="category-dropdown">Select category:</label>
+        <select id="category-dropdown">
+            <% categories.forEach((category)=> { %>
+                <option value="<%= category %>">
+                    <%= category %>
+                </option>
+                <% }); %>
+        </select>
+    </div>
+
+    <table id="url-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Key</th>
+                <th>URL</th>
+                <th>Category</th>
+                <!-- <th>Expiry Date</th> -->
+                <th>Created Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</body>
+<script>
+    function fetchDataAndUpdateTable(category) {
+        fetch(`/get/urls?category=${category}`)
+            .then((response) => response.json())
+            .then((data) => {
+                const table = document.getElementById("url-table");
+
+                // Clear the existing rows from the table
+                while (table.rows.length > 1) {
+                    table.deleteRow(1);
+                }
+
+                // Loop through the data and add new rows to the table
+                data.forEach((row) => {
+                    const newRow = table.insertRow();
+
+                    // Add cells to the new row
+                    const idCell = newRow.insertCell();
+                    idCell.textContent = row.id;
+
+                    const keyCell = newRow.insertCell();
+                    keyCell.textContent = row.key;
+
+                    const urlCell = newRow.insertCell();
+                    const urlLink = document.createElement("a"); // create a new anchor tag
+                    urlLink.href = row.url; // set the href attribute to the URL
+                    urlLink.target = "_blank"; // set the target attribute to "_blank" to open the link in a new tab
+                    urlLink.textContent = row.url; // set the text content of the anchor tag to the URL
+                    urlCell.appendChild(urlLink);
+
+                    const categoryCell = newRow.insertCell();
+                    categoryCell.textContent = row.category;
+
+                    // const expiryDateCell = newRow.insertCell();
+                    // expiryDateCell.textContent = row.expiry_date;
+
+                    const createdTimestampCell = newRow.insertCell();
+                    createdTimestampCell.textContent = row.created_timestamp;
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
+</script>
+
+<!-- <script href="./js/CategoryHelper.js"></script> -->
+
+<script>
+    const dropdown = document.getElementById('category-dropdown');
+    let selectedCategory = dropdown.value;
+
+    dropdown.addEventListener('change', (event) => {
+        selectedCategory = event.target.value;
+        fetchDataAndUpdateTable(selectedCategory);
+    });
+</script>
+<script>
+    // Add an event listener to the window's load event
+    window.addEventListener('load', () => {
+        // Call fetchDataAndUpdateTable function with the initial category value
+        const category = document.querySelector('#category-dropdown').value;
+        fetchDataAndUpdateTable(category);
+    });
+</script>
+
+</html>

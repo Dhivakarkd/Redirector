@@ -1,0 +1,38 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+}
+
+.header h1 span {
+    margin-left: 5px;
+}
+
+.header .btn-container {
+    display: flex;
+}
+
+.header .btn-container button {
+    padding: 5px 10px;
+    margin-left: 10px;
+    background-color: #fff;
+    color: #333;
+    border: none;
+    cursor: pointer;
+}
+
+.header .btn-container button:hover {
+    background-color: #333;
+    color: #fff;
+}

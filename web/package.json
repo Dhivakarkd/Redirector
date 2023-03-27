@@ -1,11 +1,12 @@
 {
   "name": "redirector",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Simple Redirector Application",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "docker-compose up --build"
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,10 @@
     "ejs": "^3.1.9",
     "express": "^4.18.0",
     "express-rate-limit": "^6.7.0",
+    "log4js": "^6.9.1",
     "redis": "^4.5.1",
+    "serve-favicon": "^2.5.0",
+    "sqlite3": "^5.1.6",
     "validator": "^13.7.0"
   }
 }

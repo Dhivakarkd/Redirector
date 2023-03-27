@@ -1,11 +1,12 @@
 FROM node:19-alpine3.16
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
-RUN npm ci
+RUN npm install
 RUN apk add curl
-COPY ./index.js ./Helper.js ./
-COPY ./public ./
-CMD ["npm","start"]
+
+COPY . .
+
+CMD ["npm", "start"]
