@@ -6,6 +6,7 @@ const db = require("./database").db;
 const categoryCache = require("./database").getCategories;
 const log4js = require("log4js");
 log4js.configure("log4js.json");
+const escape = require("escape-html");
 
 const logger = log4js.getLogger();
 
@@ -150,9 +151,14 @@ app.post("/add/insert", apiLimiter, (req, res) => {
       }
     });
   } else {
+    const encodedKeyName = escape(keyName);
+    const encodedUrlPath = escape(UrlPath);
+
     res
       .status(400)
-      .send(`Bad Request - key : '${keyName}'/value : '${UrlPath}'`);
+      .send(
+        `Bad Request - key : '${encodedKeyName}'/value : '${encodedUrlPath}'`
+      );
   }
 });
 

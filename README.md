@@ -1,3 +1,5 @@
+[![Docker Build Push](https://github.com/Dhivakarkd/Redirector/actions/workflows/docker-push.yml/badge.svg)](https://github.com/Dhivakarkd/Redirector/actions/workflows/docker-push.yml)
+
 <p align="center">
 <img src = "https://user-images.githubusercontent.com/46301457/225085182-c93f09e6-ca70-4907-9d75-3749af185fd7.png" width ="150px" height="150px"/>
 </p>
