@@ -3,7 +3,7 @@ version: "3"
 services:
   web:
     container_name: redirector
-    # image: dhivakarkd/redirector:latest
+    image: dhivakarkd/redirector:latest
     build: .
     mem_limit: 50m
     mem_reservation: 40M

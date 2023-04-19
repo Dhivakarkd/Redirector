@@ -19,6 +19,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: "{{defaultContext}}:web"
+          context: "{{defaultContext}}"
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/redirector:latest,${{ secrets.DOCKERHUB_USERNAME }}/redirector:2.0.0
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/redirector:latest,${{ secrets.DOCKERHUB_USERNAME }}/redirector:2.0.1
