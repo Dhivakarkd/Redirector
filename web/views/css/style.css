@@ -1,6 +1,7 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins' , serif;
   background-color: #f2f2f2;
+  margin: 0%;
 }
 
 h1 {
@@ -16,8 +17,22 @@ h2 {
   color: #313131;
 }
 
+.description{
+  display: flex;
+  justify-content: center;
+  
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+
 form {
-  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  max-width: 800px;
   margin: 20px auto;
   background-color: #ffffff;
   padding: 20px;
@@ -25,13 +40,21 @@ form {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+
 label {
-  display: block;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
   margin-bottom: 10px;
   font-size: 16px;
   font-weight: bold;
+  text-align: left;
 }
 
+label i {
+  padding-right: 7px;
+}
 input[type="text"],
 input[type="url"] {
   display: block;
@@ -41,6 +64,7 @@ input[type="url"] {
   border-radius: 5px;
   border: 1px solid #cccccc;
   margin-bottom: 20px;
+  box-sizing: border-box;
 }
 
 button[type="submit"] {
@@ -50,18 +74,18 @@ button[type="submit"] {
   font-size: 16px;
   border-radius: 5px;
   border: none;
-  background-color: #007bff;
+  background-color: #3772FF;
   color: #ffffff;
   cursor: pointer;
 }
 
 button[type="submit"]:hover {
-  background-color: #0069d9;
+  background-color: #3762FF;
 }
 
 .button {
   display: inline;
-  background-color: #4CAF50;
+  background-color: #3772FF;
   color: #ffffff;
   margin-top: 4px;
   padding: 10px 20px;
@@ -74,7 +98,7 @@ button[type="submit"]:hover {
 }
 
 .button:hover {
-  background-color: #3e8e41;
+  background-color: #3762FF;
 }
 
 
@@ -91,8 +115,18 @@ button[type="submit"]:hover {
   align-items: center;
   justify-content: center;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-   background-color: #ffffff;
+  background-color: #ffffff;
   padding: 20px;
+}
+
+.icon-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.icon-label i {
+  margin-right: 10px;
 }
 
 /* Style the dropdown */
@@ -100,13 +134,15 @@ select {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
-  border: 1px solid #ccc;
+  border: 1px solid #E6E8E6;
   border-radius: 4px;
   box-sizing: border-box;
+
 }
 
 /* Style the selected option */
 select option:checked {
-  background-color: #007bff;
-  color: #fff;
+  background-color: #3772FF; /* set secondary background color */
+  color: #E6E8E6; /* set text color to black */
 }
+
