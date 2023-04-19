@@ -4,7 +4,7 @@ services:
   web:
     container_name: redirector
     image: dhivakarkd/redirector:latest
-    build: ./web
+    build: .
     mem_limit: 50m
     mem_reservation: 40M
     restart: unless-stopped

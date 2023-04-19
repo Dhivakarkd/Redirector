@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Creation Success</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/Header.css">
+</head>
+
+<body>
+  <header class="header">
+    <div class="home-lab-index">
+      <h1>
+        <i class="fa fa-home"></i> Home Lab Index
+      </h1>
+    </div>
+    <div class=" btn-container">
+      <button onclick="window.location.href='/main/home'">Add Link</button>
+      <button onclick="window.location.href='/view/indexes'">Indexes</button>
+    </div>
+  </header>
+  <h2>&#x23E9; Quick Link Created Successfully &#x2705;</h2>
+  <p></p>
+  <div class="result-tab">
+    <div class="icon-label">
+      <i class="fa fa-key"></i>
+      <label for="key">Key : <%= defaults.key %></label>
+    </div>
+    <div class="icon-label">
+      <i class="fa fa-link"></i>
+      <label for="url">URL : <a href="<%= defaults.value %>">
+          <%= defaults.value %>
+        </a></label>
+    </div>
+    <a href="http://go/<%= defaults.key %>" class="button"><i class="fa fa-external-link-alt"></i> go/<%= defaults.key
+        %></a>
+  </div>
+
+</body>
+
+</html>
