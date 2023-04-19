@@ -65,6 +65,14 @@ app.get("/main/home", (req, res) => {
   res.render("form", { defaults });
 });
 
+app.get("/", (req, res) => {
+  const defaults = {
+    value: res.body?.value || null,
+    dropdownValues: categoryCache(),
+  };
+  res.render("form", { defaults });
+});
+
 // Render the form page
 app.get("/view/setting", (req, res) => {
   var userSettings = {
