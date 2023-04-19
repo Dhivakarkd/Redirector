@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/Header.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="home-lab-index">
+            <h1>
+                <i class="fa fa-home"></i> Home Lab Index
+            </h1>
+        </div>
+        <div class=" btn-container">
+            <button onclick="window.location.href='/main/home'">Add Link</button>
+            <button onclick="window.location.href='/view/indexes'">Indexes</button>
+            <button onclick="window.location.href='/view/setting'">Settings</button>
+        </div>
+    </header>
+    <h1> <i class="fas fa-tools"></i> Settings</h1>
+
+    <form method="post" action="/action/import" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <button type="submit">Import</button>
+    </form>
+
+    <form method="post" action="/action/export">
+        <button type="submit">Export</button>
+    </form>
+    <form>
+        <label>Name:</label>
+        <input type="text" name="name" value="<%= userSettings.name %>">
+
+        <label>Email:</label>
+        <input type="email" name="email" value="<%= userSettings.email %>">
+
+        <label>Notifications:</label>
+        <select name="notifications">
+            <option value="true" <% if (userSettings.notifications) { %>selected<% } %>>On</option>
+            <option value="false" <% if (!userSettings.notifications) { %>selected<% } %>>Off</option>
+        </select>
+
+        <button type="submit">Save</button>
+    </form>
+
+
+</body>
+
+</html>

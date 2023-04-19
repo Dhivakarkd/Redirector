@@ -7,6 +7,8 @@ const categoryCache = require("./database").getCategories;
 const log4js = require("log4js");
 log4js.configure("log4js.json");
 const escape = require("escape-html");
+const multer = require("multer");
+const fs = require("fs");
 
 const logger = log4js.getLogger();
 
@@ -19,6 +21,18 @@ const redis = require("redis");
 const { isValidUrl, isNullOrEmpty } = require("./Helper.js");
 
 app.set("view engine", "ejs");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "db/"); // Save uploaded files to the uploads directory
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname); // Use the original file name
+  },
+});
+
+// Create a Multer instance with the defined storage
+const upload = multer({ storage });
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -51,28 +65,72 @@ app.get("/main/home", (req, res) => {
   res.render("form", { defaults });
 });
 
+// Render the form page
+app.get("/view/setting", (req, res) => {
+  var userSettings = {
+    name: "John Doe",
+    email: "john.doe@example.com",
+    notifications: true,
+  };
+  res.render("setting", { userSettings: userSettings });
+});
+
+app.post("/action/export", apiLimiter, async (req, res) => {
+  try {
+    const data = await dbUtils.getExportData();
+    res.setHeader("Content-disposition", "attachment; filename=data.json");
+    res.setHeader("Content-Type", "application/json");
+    res.status(200).send(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error exporting data");
+  }
+});
+
+app.post("/action/import", upload.single("file"), apiLimiter, (req, res) => {
+  // Check if a file was uploaded
+  if (!req.file) {
+    res.status(400).send("Bad Request");
+    return;
+  }
+
+  // Read the uploaded file and parse the JSON data
+  const fileContents = fs.readFileSync(req.file.path, "utf-8");
+  const jsonData = JSON.parse(fileContents);
+  console.log(jsonData);
+
+  dbUtils.insertImportData(jsonData);
+
+  var userSettings = {
+    name: "John Doe",
+    email: "john.doe@example.com",
+    notifications: true,
+  };
+  res.render("setting", { userSettings: userSettings });
+});
+
 app.get("/:value", apiLimiter, (req, res) => {
   logger.info("value is " + req.params.value);
 
-  dbUtils.getUrlByKey(req.params.value, (err, data) => {
-    if (err) {
+  dbUtils
+    .getUrlByKey(req.params.value)
+    .then((url) => {
+      if (!Object.is(url, null)) {
+        logger.info(req.params.value);
+        res.redirect(301, url.url);
+      } else {
+        const defaults = {
+          value: req.params.value,
+          dropdownValues: categoryCache(),
+        };
+        logger.info(defaults);
+        res.render("form", { defaults });
+      }
+    })
+    .catch((err) => {
       logger.error(err.message);
       res.status(500).send("Internal Server Error");
-    }
-    if (!Object.is(data, null)) {
-      logger.info(req.params.value);
-
-      res.redirect(301, data.url);
-    } else {
-      const defaults = {
-        value: req.params.value,
-        dropdownValues: categoryCache(),
-      };
-
-      logger.info(defaults);
-      res.render("form", { defaults });
-    }
-  });
+    });
 });
 
 app.get("/get/all", apiLimiter, (req, res) => {
@@ -135,11 +193,9 @@ app.post("/add/insert", apiLimiter, (req, res) => {
   if (validator.isURL(UrlPath) && !isNullOrEmpty(keyName)) {
     logger.info(UrlPath);
 
-    dbUtils.insertUrl(urlData, (err, data) => {
-      if (err) {
-        logger.error(err.message);
-        res.status(500).send("Internal Server Error");
-      } else {
+    dbUtils
+      .insertUrl(urlData)
+      .then((data) => {
         const defaults = {
           key: data.key,
           value: data.url,
@@ -148,8 +204,11 @@ app.post("/add/insert", apiLimiter, (req, res) => {
           `Successfully inserted key '${keyName}'/value : '${UrlPath}' in Database.`
         );
         res.render("success", { defaults });
-      }
-    });
+      })
+      .catch((err) => {
+        logger.error(err.message);
+        res.status(500).send("Internal Server Error");
+      });
   } else {
     const encodedKeyName = escape(keyName);
     const encodedUrlPath = escape(UrlPath);
