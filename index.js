@@ -22,11 +22,6 @@ const PORT = process.env.PORT || 4040;
 
 app.set("view engine", "ejs");
 
-// // Set MIME type for .js files
-// mime.define({
-//   "application/javascript": ["js"],
-// });
-
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
@@ -40,17 +35,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use(apiLimiter);
-
-// app.use(
-//   express.static(path.join(__dirname, "views"), {
-//     setHeaders: (res, filePath) => {
-//       const ext = path.extname(filePath);
-//       if (ext === ".js") {
-//         res.setHeader("Content-Type", "text/javascript");
-//       }
-//     },
-//   })
-// );
 
 app.use(express.static(path.join(__dirname, "public")));
 
