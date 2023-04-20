@@ -39,6 +39,8 @@ app.use(express.urlencoded({ extended: false }));
 // parse application/json
 app.use(express.json());
 
+app.use(apiLimiter);
+
 // app.use(
 //   express.static(path.join(__dirname, "views"), {
 //     setHeaders: (res, filePath) => {
