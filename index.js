@@ -8,24 +8,24 @@ log4js.configure("log4js.json");
 
 const mime = require("mime");
 
-const viewRouter = require("./views/router/viewRouter");
-const actionRouter = require("./views/router/actionRouter");
-const apiRouter = require("./views/router/apiRouter");
+const viewRouter = require("./public/router/viewRouter");
+const actionRouter = require("./public/router/actionRouter");
+const apiRouter = require("./public/router/apiRouter");
 
 const logger = log4js.getLogger();
 
 var favicon = require("serve-favicon");
 var path = require("path");
 const app = express();
-app.use(favicon(path.join(__dirname, "views/images", "favicon.ico")));
+app.use(favicon(path.join(__dirname, "public/images", "favicon.ico")));
 const PORT = process.env.PORT || 4040;
 
 app.set("view engine", "ejs");
 
-// Set MIME type for .js files
-mime.define({
-  "application/javascript": ["js"],
-});
+// // Set MIME type for .js files
+// mime.define({
+//   "application/javascript": ["js"],
+// });
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -50,7 +50,7 @@ app.use(express.json());
 //   })
 // );
 
-app.use(express.static("views"));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/view", viewRouter);
 app.use("/action", actionRouter);
