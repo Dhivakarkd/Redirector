@@ -1,15 +1,16 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
-const validator = require("validator");
 const dbUtils = require("./dbUtils");
 const db = require("./database").db;
 const categoryCache = require("./database").getCategories;
 const log4js = require("log4js");
 log4js.configure("log4js.json");
-const escape = require("escape-html");
-const multer = require("multer");
-const fs = require("fs");
+
 const mime = require("mime");
+
+const viewRouter = require("./views/router/viewRouter");
+const actionRouter = require("./views/router/actionRouter");
+const apiRouter = require("./views/router/apiRouter");
 
 const logger = log4js.getLogger();
 
@@ -18,27 +19,13 @@ var path = require("path");
 const app = express();
 app.use(favicon(path.join(__dirname, "views/images", "favicon.ico")));
 const PORT = process.env.PORT || 4040;
-const redis = require("redis");
-const { isValidUrl, isNullOrEmpty } = require("./Helper.js");
 
 app.set("view engine", "ejs");
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "db/"); // Save uploaded files to the uploads directory
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname); // Use the original file name
-  },
-});
 
 // Set MIME type for .js files
 mime.define({
   "application/javascript": ["js"],
 });
-
-// Create a Multer instance with the defined storage
-const upload = multer({ storage });
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -52,24 +39,22 @@ app.use(express.urlencoded({ extended: false }));
 // parse application/json
 app.use(express.json());
 
-app.use(
-  express.static("views", {
-    setHeaders: (res, path) => {
-      if (path.endsWith(".js")) {
-        res.setHeader("Content-Type", "text/javascript");
-      }
-    },
-  })
-);
+// app.use(
+//   express.static(path.join(__dirname, "views"), {
+//     setHeaders: (res, filePath) => {
+//       const ext = path.extname(filePath);
+//       if (ext === ".js") {
+//         res.setHeader("Content-Type", "text/javascript");
+//       }
+//     },
+//   })
+// );
 
-// Render the form page
-app.get("/view/home", (req, res) => {
-  const defaults = {
-    value: res.body?.value || null,
-    dropdownValues: categoryCache(),
-  };
-  res.render("form", { defaults });
-});
+app.use(express.static("views"));
+
+app.use("/view", viewRouter);
+app.use("/action", actionRouter);
+app.use("/get", apiRouter);
 
 app.get("/", (req, res) => {
   const defaults = {
@@ -77,51 +62,6 @@ app.get("/", (req, res) => {
     dropdownValues: categoryCache(),
   };
   res.render("form", { defaults });
-});
-
-// Render the form page
-app.get("/view/setting", (req, res) => {
-  var userSettings = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    notifications: true,
-  };
-  res.render("setting", { userSettings: userSettings });
-});
-
-app.post("/action/export", apiLimiter, async (req, res) => {
-  try {
-    const data = await dbUtils.getExportData();
-    res.setHeader("Content-disposition", "attachment; filename=data.json");
-    res.setHeader("Content-Type", "application/json");
-    res.status(200).send(data);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error exporting data");
-  }
-});
-
-app.post("/action/import", upload.single("file"), apiLimiter, (req, res) => {
-  // Check if a file was uploaded
-  if (!req.file) {
-    res.status(400).send("Bad Request");
-    return;
-  }
-
-  // Read the uploaded file and parse the JSON data
-  const fileContents = fs.readFileSync(req.file.path, "utf-8");
-  const jsonData = JSON.parse(fileContents);
-  console.log(jsonData);
-
-  dbUtils
-    .insertImportData(jsonData)
-    .then(() => {
-      res.status(200).send();
-    })
-    .catch((error) => {
-      logger.error(error.message);
-      res.status(500).send("Internal Server Error");
-    });
 });
 
 app.get("/:value", apiLimiter, (req, res) => {
@@ -147,88 +87,6 @@ app.get("/:value", apiLimiter, (req, res) => {
       res.status(500).send("Internal Server Error");
     });
 });
-
-// GET route for the EJS page
-app.get("/view/indexes", apiLimiter, (req, res) => {
-  // get all categories from the database
-  let categories = categoryCache();
-
-  categories.pop(); // remove the last element ("Custom")
-  categories.push("ALL"); // add "ALL" to the end of the array
-
-  let selectedCategory;
-  // render the EJS page with the rows and categories data
-  res.render("Categories", { categories, selectedCategory });
-});
-
-app.get("/get/urls", apiLimiter, (req, res) => {
-  const category = req.query.category;
-
-  dbUtils
-    .getUrlByCategory(category)
-    .then((urls) => {
-      res.status(200).send(urls);
-    })
-    .catch((err) => {
-      logger.error(err.message);
-      res.status(500).send("Internal Server Error");
-    });
-});
-
-app.post("/add/insert", apiLimiter, (req, res) => {
-  logger.info(`API is listening on get /add`);
-
-  let keyName = req.body.key;
-  let UrlPath = req.body.url;
-
-  const urlData = {
-    key: req.body.key,
-    url: req.body.url,
-    category: req.body.dropdown,
-    customvalue: req.body.customValue,
-  };
-
-  if (validator.isURL(UrlPath) && !isNullOrEmpty(keyName)) {
-    logger.info(UrlPath);
-
-    dbUtils
-      .insertUrl(urlData)
-      .then((data) => {
-        const defaults = {
-          key: data.key,
-          value: data.url,
-        };
-        logger.info(
-          `Successfully inserted key '${keyName}'/value : '${UrlPath}' in Database.`
-        );
-        res.render("success", { defaults });
-      })
-      .catch((err) => {
-        logger.error(err.message);
-        res.status(500).send("Internal Server Error");
-      });
-  } else {
-    const encodedKeyName = escape(keyName);
-    const encodedUrlPath = escape(UrlPath);
-
-    res
-      .status(400)
-      .send(
-        `Bad Request - key : '${encodedKeyName}'/value : '${encodedUrlPath}'`
-      );
-  }
-});
-
-// app.delete("/remove/:keyName", apiLimiter, async (req, res) => {
-//   const { keyName } = req.params;
-//   redisClient.del(keyName);
-//   logger.info(`Deleted ${keyName} key`);
-//   res.status(200).send(`Deleted ${keyName} key`);
-// });
-
-// app.get("/get/healthcheck", apiLimiter, checkRedisConnection, (req, res) => {
-//   res.status(200).send("API is up and running");
-// });
 
 app.listen(PORT, () => {
   logger.info(`Redirector is Up`);
