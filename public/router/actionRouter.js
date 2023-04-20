@@ -41,8 +41,11 @@ router.post("/import", upload.single("file"), (req, res) => {
     return;
   }
 
+  // Sanitize the file path
+  const filePath = path.normalize(req.file.path);
+
   // Read the uploaded file and parse the JSON data
-  const fileContents = fs.readFileSync(req.file.path, "utf-8");
+  const fileContents = fs.readFileSync(filePath, "utf-8");
   const jsonData = JSON.parse(fileContents);
   console.log(jsonData);
 
