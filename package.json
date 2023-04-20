@@ -32,6 +32,7 @@
     "redis": "^4.5.1",
     "serve-favicon": "^2.5.0",
     "sqlite3": "^5.1.6",
+    "sweetalert2": "^11.7.3",
     "validator": "^13.7.0"
   }
 }

@@ -9,6 +9,7 @@ log4js.configure("log4js.json");
 const escape = require("escape-html");
 const multer = require("multer");
 const fs = require("fs");
+const mime = require("mime");
 
 const logger = log4js.getLogger();
 
@@ -29,6 +30,11 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(null, file.originalname); // Use the original file name
   },
+});
+
+// Set MIME type for .js files
+mime.define({
+  "application/javascript": ["js"],
 });
 
 // Create a Multer instance with the defined storage
@@ -57,7 +63,7 @@ app.use(
 );
 
 // Render the form page
-app.get("/main/home", (req, res) => {
+app.get("/view/home", (req, res) => {
   const defaults = {
     value: res.body?.value || null,
     dropdownValues: categoryCache(),
@@ -107,14 +113,15 @@ app.post("/action/import", upload.single("file"), apiLimiter, (req, res) => {
   const jsonData = JSON.parse(fileContents);
   console.log(jsonData);
 
-  dbUtils.insertImportData(jsonData);
-
-  var userSettings = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    notifications: true,
-  };
-  res.render("setting", { userSettings: userSettings });
+  dbUtils
+    .insertImportData(jsonData)
+    .then(() => {
+      res.status(200).send();
+    })
+    .catch((error) => {
+      logger.error(error.message);
+      res.status(500).send("Internal Server Error");
+    });
 });
 
 app.get("/:value", apiLimiter, (req, res) => {
@@ -141,24 +148,6 @@ app.get("/:value", apiLimiter, (req, res) => {
     });
 });
 
-app.get("/get/all", apiLimiter, (req, res) => {
-  db.all(
-    `
-  SELECT * FROM urls
-`,
-    [],
-    (err, rows) => {
-      if (err) {
-        throw err;
-      }
-
-      // Convert rows to JSON and send as response
-      const jsonObject = dbUtils.rowsToJSON(rows);
-      res.json(jsonObject);
-    }
-  );
-});
-
 // GET route for the EJS page
 app.get("/view/indexes", apiLimiter, (req, res) => {
   // get all categories from the database
@@ -175,14 +164,15 @@ app.get("/view/indexes", apiLimiter, (req, res) => {
 app.get("/get/urls", apiLimiter, (req, res) => {
   const category = req.query.category;
 
-  dbUtils.getUrlByCategory(category, (err, urls) => {
-    if (err) {
+  dbUtils
+    .getUrlByCategory(category)
+    .then((urls) => {
+      res.status(200).send(urls);
+    })
+    .catch((err) => {
       logger.error(err.message);
       res.status(500).send("Internal Server Error");
-    } else {
-      res.status(200).send(urls);
-    }
-  });
+    });
 });
 
 app.post("/add/insert", apiLimiter, (req, res) => {

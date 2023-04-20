@@ -57,26 +57,40 @@ async function getExportData() {
 }
 
 function insertImportData(jsonData) {
-  const cache = getCache();
+  return new Promise((resolve, reject) => {
+    const cache = getCache();
 
-  for (const row of jsonData) {
-    const { key, url, category } = row;
+    for (const row of jsonData) {
+      const { key, url, category } = row;
 
-    // Insert category in category table, and add it to the cache if it doesn't exist
-    const sqlCategory = "INSERT INTO category (name) VALUES (?)";
-    const paramsCategory = [category];
+      // Insert category in category table, and add it to the cache if it doesn't exist
+      const sqlCategory = "INSERT INTO category (name) VALUES (?)";
+      const paramsCategory = [category];
 
-    if (!cache.includes(category)) {
-      try {
-        run("INSERT INTO categories (category) VALUES (?)", category);
-        cache.push(category);
-      } catch (err) {
-        console.error(err.message);
+      if (!cache.includes(category)) {
+        try {
+          run("INSERT INTO categories (category) VALUES (?)", category);
+          cache.push(category);
+        } catch (err) {
+          console.error(err.message);
+          reject(err);
+        }
       }
+
+      // Insert url in url table
+      insertNewUrl(key, url, category)
+        .then(() => {
+          resolve();
+        })
+        .catch((err) => {
+          console.error(err.message);
+          reject(err);
+        });
     }
-    insertNewUrl(key, url, category);
-  }
+    updateCategoriesCache();
+  });
 }
+
 function insertUrl(urlData) {
   // Destructure the input object
   const { key, url, category, customvalue } = urlData;

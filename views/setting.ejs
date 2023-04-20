@@ -4,8 +4,9 @@
 <head>
     <title>Settings</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/css/style.css">
+
     <link rel="stylesheet" href="/css/Header.css">
+    <link rel="stylesheet" href="/css/setting.css">
 </head>
 
 <body>
@@ -16,38 +17,89 @@
             </h1>
         </div>
         <div class=" btn-container">
-            <button onclick="window.location.href='/main/home'">Add Link</button>
+            <button onclick="window.location.href='/view/home'">Add Link</button>
             <button onclick="window.location.href='/view/indexes'">Indexes</button>
             <button onclick="window.location.href='/view/setting'">Settings</button>
         </div>
     </header>
     <h1> <i class="fas fa-tools"></i> Settings</h1>
 
-    <form method="post" action="/action/import" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <button type="submit">Import</button>
-    </form>
 
-    <form method="post" action="/action/export">
-        <button type="submit">Export</button>
-    </form>
-    <form>
-        <label>Name:</label>
-        <input type="text" name="name" value="<%= userSettings.name %>">
+    <div class="container">
+        <button onclick="importdata()" class="import">Import</button>
+        <form method="post" action="/action/export">
+            <button type="submit" class="export">Export</button>
+        </form>
+    </div>
 
-        <label>Email:</label>
-        <input type="email" name="email" value="<%= userSettings.email %>">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        async function importdata() {
+            const { value: file } = await Swal.fire({
+                title: 'Select Json File to Upload',
+                input: 'file',
+                inputAttributes: {
+                    'accept': 'application/json',
+                    'aria-label': 'Upload your file'
+                }
+            })
 
-        <label>Notifications:</label>
-        <select name="notifications">
-            <option value="true" <% if (userSettings.notifications) { %>selected<% } %>>On</option>
-            <option value="false" <% if (!userSettings.notifications) { %>selected<% } %>>Off</option>
-        </select>
+            if (file) {
+                const formData = new FormData()
+                formData.append('file', file)
 
-        <button type="submit">Save</button>
-    </form>
-
+                fetch('/action/import', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Import Successful',
+                            showConfirmButton: true,
+                            timer: 1500
+                        })
+                    } else {
+                        throw new Error('Export Failed')
+                    }
+                }).catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Import Failed',
+                        text: error.message,
+                        showConfirmButton: true,
+                        timer: 1500
+                    })
+                })
+            }
+        }
+        async function exportFunction() {
+            fetch('/action/export', {
+                method: 'POST'
+            }).then(response => {
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Export Successful',
+                        showConfirmButton: true,
+                        timer: 1500
+                    })
+                } else {
+                    throw new Error('Export Failed')
+                }
+            }).catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Export Failed',
+                    text: error.message,
+                    showConfirmButton: true,
+                    timer: 1500
+                })
+            })
+        }
+    </script>
 
 </body>
+
 
 </html>
