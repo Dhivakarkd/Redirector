@@ -37,3 +37,18 @@ function fetchDataAndUpdateTable(category) {
       console.error(error);
     });
 }
+
+const dropdown = document.getElementById("category-dropdown");
+let selectedCategory = dropdown.value;
+
+dropdown.addEventListener("change", (event) => {
+  selectedCategory = event.target.value;
+  fetchDataAndUpdateTable(selectedCategory);
+});
+
+// Add an event listener to the window's load event
+window.addEventListener("load", () => {
+  // Call fetchDataAndUpdateTable function with the initial category value
+  const category = document.querySelector("#category-dropdown").value;
+  fetchDataAndUpdateTable(category);
+});

@@ -19,8 +19,9 @@
       </h1>
     </div>
     <div class=" btn-container">
-      <button onclick="window.location.href='/main/home'">Add Link</button>
+      <button onclick="window.location.href='/view/home'">Add Link</button>
       <button onclick="window.location.href='/view/indexes'">Indexes</button>
+      <button onclick="window.location.href='/view/setting'">Settings</button>
     </div>
   </header>
   <div class="description">
@@ -30,7 +31,7 @@
   <div style="text-align: center;margin-top: 4px;margin-bottom: 4px;">
     <a id="link" href="http://go/<%= defaults.value %>" class="button">Sample&#128279;: go/<%= defaults.value %></a>
   </div>
-  <form method="POST" action="/add/insert">
+  <form method="POST" action="/action/insert">
 
     <label for="dropdown"><i class="fa fa-list-dots"></i> Category</label>
     <select name="dropdown" id="dropdown">

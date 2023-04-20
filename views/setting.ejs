@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="/css/Header.css">
+    <link rel="stylesheet" href="/css/setting.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="home-lab-index">
+            <h1>
+                <i class="fa fa-home"></i> Home Lab Index
+            </h1>
+        </div>
+        <div class=" btn-container">
+            <button onclick="window.location.href='/view/home'">Add Link</button>
+            <button onclick="window.location.href='/view/indexes'">Indexes</button>
+            <button onclick="window.location.href='/view/setting'">Settings</button>
+        </div>
+    </header>
+    <h1> <i class="fas fa-tools"></i> Settings</h1>
+
+
+    <div class="container">
+        <button onclick="importdata()" class="import">Import</button>
+        <form method="post" action="/action/export">
+            <button type="submit" class="export">Export</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/settingHelper.js">
+
+    </script>
+
+</body>
+
+
+</html>

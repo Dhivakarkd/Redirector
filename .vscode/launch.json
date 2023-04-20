@@ -9,7 +9,7 @@
             "name": "Deploy",
             "request": "launch",
             "type": "node-terminal",
-            "cwd": "${workspaceFolder}/web"
+            "cwd": "${workspaceFolder}"
         
         }
     ]
