@@ -45,6 +45,7 @@ function fetchDataAndUpdateTable(category, page) {
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
         deleteButton.addEventListener("click", () => {
+          console.log("row id is ", row.id);
           deleteUrl(row.id); // Call the deleteUrl function with the ID of the row
         });
         deleteCell.appendChild(deleteButton);

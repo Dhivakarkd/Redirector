@@ -37,15 +37,17 @@ router.get("/urls", async (req, res) => {
   }
 });
 
-// app.delete("/remove/:keyName", apiLimiter, async (req, res) => {
-//   const { keyName } = req.params;
-//   redisClient.del(keyName);
-//   logger.info(`Deleted ${keyName} key`);
-//   res.status(200).send(`Deleted ${keyName} key`);
-// });
-
-// app.get("/get/healthcheck", apiLimiter, checkRedisConnection, (req, res) => {
-//   res.status(200).send("API is up and running");
-// });
+router.delete("/urls/:id", (req, res) => {
+  const id = req.params.id;
+  dbUtils
+    .deleteUrlById(id)
+    .then(() => {
+      res.status(200).send("URL deleted successfully");
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Failed to delete URL");
+    });
+});
 
 module.exports = router;
