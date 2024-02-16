@@ -3,6 +3,7 @@ const router = express.Router();
 
 const dbUtils = require("../../dbUtils");
 const escape = require("escape-html");
+const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
 const log4js = require("log4js");
