@@ -58,6 +58,8 @@ app.get("/:value", apiLimiter, (req, res) => {
     .then((url) => {
       if (!Object.is(url, null)) {
         logger.info(req.params.value);
+        res.set("Cache-Control", "no-cache, no-store, must-revalidate");
+        res.set("Pragma", "no-cache");
         res.redirect(301, url.url);
       } else {
         const defaults = {
