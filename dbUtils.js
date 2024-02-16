@@ -22,7 +22,7 @@ function rowsToJSON(rows) {
   return jsonObject;
 }
 
-function getUrlByCategory(category) {
+function getUrlByCategory(category, start, end) {
   let sql = "SELECT * FROM urls";
   const params = [];
 
@@ -31,10 +31,26 @@ function getUrlByCategory(category) {
     params.push(category);
   }
 
+  // Add LIMIT and OFFSET clauses for pagination
+  sql += " LIMIT ? OFFSET ?";
+  params.push(parseInt(end - start), start);
+
   return all(sql, params).then((rows) => {
     const urls = rows.map((row) => mapRowToUrl(row));
     return urls;
   });
+}
+
+function deleteUrlById(id) {
+  const sql = "DELETE FROM urls WHERE id = ?";
+  return run(sql, [id])
+    .then(() => {
+      logger.info("Deleted URL with ID:", id);
+    })
+    .catch((error) => {
+      logger.error("Error deleting URL with ID:", id, error);
+      throw error; // Rethrow the error to be handled upstream
+    });
 }
 
 function getUrlByKey(key) {
@@ -91,6 +107,25 @@ function insertImportData(jsonData) {
   });
 }
 
+async function getTotalCountByCategory(category) {
+  let sql = "SELECT COUNT(*) AS count FROM urls";
+
+  const params = [];
+  if (category !== "ALL") {
+    sql += " WHERE category = ?";
+    params.push(category);
+  }
+
+  try {
+    const result = await get(sql, params);
+    logger.info("Value of result : ", result);
+    return result?.count ?? 0;
+  } catch (error) {
+    logger.error("Error retrieving total count by category:", error);
+    throw error; // Rethrow the error to be handled upstream
+  }
+}
+
 function insertUrl(urlData) {
   // Destructure the input object
   const { key, url, category, customvalue } = urlData;
@@ -134,4 +169,6 @@ module.exports = {
   insertUrl,
   getUrlByCategory,
   insertImportData,
+  deleteUrlById,
+  getTotalCountByCategory,
 };
