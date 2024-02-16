@@ -1,1 +1,12 @@
-[{"key":"sadfsasasfas","url":"https://youtu.be/l_2NLw1pdxQda","category":"Quick Links"},{"key":"asasassa","url":"https://youtu.be/fasdfadsfas","category":"System"}]
+[
+    {
+        "key": "netflix",
+        "url": "https://www.netflix.com/browse",
+        "category": "Entertainment"
+    },
+    {
+        "key": "youtube",
+        "url": "https://www.youtube.com/",
+        "category": "Entertainment"
+    }
+]
