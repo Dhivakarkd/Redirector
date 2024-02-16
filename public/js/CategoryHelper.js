@@ -1,6 +1,6 @@
 // Global variables for pagination
 let currentPage = 1;
-let totalPages;
+let totalPages = 1;
 const itemsPerPage = 5; // Change this value according to your needs
 let selectedCategory;
 
@@ -20,41 +20,60 @@ function fetchDataAndUpdateTable(category, page) {
     .then((data) => {
       console.log(data);
       const table = document.getElementById("url-table");
+      const paginationContainer = document.getElementById("pagination");
 
       // Clear the existing rows from the table
       while (table.rows.length > 1) {
         table.deleteRow(1);
       }
 
-      // Loop through the data and add new rows to the table
-      data.urls.forEach((row) => {
-        const newRow = table.insertRow();
-        newRow.id = `row-${row.id}`;
+      console.log("Data length is ", data.urls.length);
 
-        const keyCell = newRow.insertCell();
-        keyCell.textContent = row.key;
+      if (data.urls.length === 0) {
+        // If no URLs found, display a message
+        const noUrlsRow = table.insertRow();
+        const cell = noUrlsRow.insertCell();
+        cell.colSpan = "4"; // Set the colspan to match the number of columns in your table
+        cell.textContent = "No URLs found";
+        cell.style.textAlign = "center";
 
-        const urlCell = newRow.insertCell();
-        urlCell.textContent = row.url;
+        // Hide pagination container
+        paginationContainer.style.display = "none";
+      } else {
+        // Loop through the data and add new rows to the table
+        data.urls.forEach((row) => {
+          const newRow = table.insertRow();
+          newRow.id = `row-${row.id}`;
 
-        const categoryCell = newRow.insertCell();
-        categoryCell.textContent = row.category;
+          const keyCell = newRow.insertCell();
+          keyCell.textContent = row.key;
 
-        // Add delete button cell
-        const deleteCell = newRow.insertCell();
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete";
-        deleteButton.addEventListener("click", () => {
-          console.log("row id is ", row.id);
-          deleteUrl(row.id); // Call the deleteUrl function with the ID of the row
+          const urlCell = newRow.insertCell();
+          urlCell.textContent = row.url;
+
+          const categoryCell = newRow.insertCell();
+          categoryCell.textContent = row.category;
+
+          // Add delete button cell
+          const deleteCell = newRow.insertCell();
+          const deleteButton = document.createElement("button");
+          deleteButton.textContent = "Delete";
+          deleteButton.addEventListener("click", () => {
+            console.log("row id is ", row.id);
+            deleteUrl(row.id); // Call the deleteUrl function with the ID of the row
+          });
+          deleteCell.appendChild(deleteButton);
+
+          // Show pagination container
+          paginationContainer.style.display = "block";
         });
-        deleteCell.appendChild(deleteButton);
-      });
+      }
 
       // Update pagination controls
       totalPages = Math.ceil(data.totalCount / itemsPerPage);
       updatePaginationControls(totalPages);
     })
+
     .catch((error) => {
       console.error(error);
     });
