@@ -55,38 +55,6 @@
   var dropdown = document.getElementById('dropdown');
   var customValue = document.getElementById('customValue');
 
-  document.getElementById("urlForm").addEventListener("submit", function (event) {
-    console.log("Form submission event listener triggered.");
-    event.preventDefault(); // Prevent the default form submission behavior
-
-    // Serialize form data
-    const formData = new FormData(event.target);
-
-    // Send a POST request using fetch
-    fetch("/action/insert", {
-      method: "POST",
-      body: formData
-    })
-      .then(response => {
-        // Check if the response is successful
-        if (!response.ok) {
-          // If response is not successful, throw an error
-          throw new Error("Failed to submit form. Status: " + response.status);
-        }
-        // If response is successful, return the response data
-        return response.json(); // Assuming response is JSON
-      })
-      .then(data => {
-        // Handle successful response here if needed
-        // For example, redirect to another page or display a success message
-        console.log("Form submitted successfully:", data);
-      })
-      .catch(error => {
-        // Handle errors
-        console.error("An error occurred:", error);
-        alert("An error occurred while submitting the form: " + error.message);
-      });
-  });
   // Show the custom value input field when the "Custom" option is selected
   dropdown.addEventListener('change', function () {
     if (dropdown.value.includes('Custom')) {
