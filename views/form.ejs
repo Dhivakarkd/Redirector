@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/css/Header.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/night.css">
 
 </head>
 
@@ -15,10 +16,11 @@
   <header class="header">
     <div class="home-lab-index">
       <h1>
-        <i class="fa fa-home"></i> Home Lab Index
+        <a href="http://go/"><i class="fa fa-home"></i></a> Home Lab Index
       </h1>
     </div>
-    <div class=" btn-container">
+    <div class="btn-container">
+      <button id="modeToggleBtn" onclick="toggleNightMode()">Night Mode</button>
       <button onclick="window.location.href='/view/home'">Add Link</button>
       <button onclick="window.location.href='/view/indexes'">Indexes</button>
       <button onclick="window.location.href='/view/setting'">Settings</button>
@@ -54,6 +56,21 @@
 <script>
   var dropdown = document.getElementById('dropdown');
   var customValue = document.getElementById('customValue');
+
+  function toggleNightMode() {
+
+    var body = document.body;
+    var modeToggleBtn = document.getElementById('modeToggleBtn');
+
+    body.classList.toggle('night-mode');
+
+    // Toggle button text
+    if (body.classList.contains('night-mode')) {
+      modeToggleBtn.textContent = 'Day Mode';
+    } else {
+      modeToggleBtn.textContent = 'Night Mode';
+    }
+  }
 
   // Show the custom value input field when the "Custom" option is selected
   dropdown.addEventListener('change', function () {

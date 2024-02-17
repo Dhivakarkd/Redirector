@@ -1,0 +1,39 @@
+/* Night Mode Styles */
+.night-mode {
+    background-color: #333;
+    color: #fff;
+}
+
+.night-mode .header {
+    background-color: #000;
+    color: #fff;
+}
+
+.night-mode th {
+    background-color: #666;
+    color: #fff;
+}
+
+.night-mode tr:hover {
+    background-color: #555;
+}
+
+.night-mode h2{
+    color: #fff;
+}
+
+.night-mode input[type="text"],
+.night-mode input[type="url"],
+.night-mode select {
+    background-color: #555;
+    color: #fff;
+}
+
+
+.night-mode form {
+    background-color: #222; /* Adjust to your preferred dark background color */
+    color: #fff;
+  }
+
+  
+/* Additional styles for other elements within the form container */
