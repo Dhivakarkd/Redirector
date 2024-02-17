@@ -15,6 +15,10 @@
     align-items: center;
 }
 
+.header a{
+    color: #a1bbf9;
+}
+
 .header h1 span {
     margin-left: 5px;
 }
