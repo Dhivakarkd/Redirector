@@ -12,8 +12,9 @@ With this app, you can create unique and memorable shortcuts that will take you 
 
 ## 🗐 Pages
 
-<img src = "https://user-images.githubusercontent.com/46301457/225082006-c0a8d2f2-6a9a-4af1-95cd-af8e47b7ebe3.png" width ="48%" height="50%" /> <img src = "https://user-images.githubusercontent.com/46301457/225081354-8cdd8970-7f30-4ee7-8cc7-d1fc54916188.png" width ="48%" height="50%"/>
+<img src = "https://github.com/Dhivakarkd/Redirector/assets/46301457/71b39006-79db-489d-aa51-408855b3155e.png" width ="48%" height="50%" /> <img src = "https://github.com/Dhivakarkd/Redirector/assets/46301457/29f45674-fa2e-4ad5-a587-a51ddd84d466.png" width ="48%" height="50%"/>
 
+<img src = "https://github.com/Dhivakarkd/Redirector/assets/46301457/fb46af04-f15c-484f-a832-b80fd6aadfda.png" width ="48%" height="50%"/> <img src = "https://github.com/Dhivakarkd/Redirector/assets/46301457/ae61f40e-d8b2-420a-8803-69453e85b39e.png" width ="48%" height="50%"/>
 
 ## 🛠️ Installation
 
@@ -40,8 +41,7 @@ This project is licensed under the MIT License.
 
 Feel free to fork and contribute to this project!
 
-
 ## 🫶 Acknowledgements
 
- - [Awesome Readme Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
- - [Awesome README](https://github.com/matiassingers/awesome-readme)
+- [Awesome Readme Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+- [Awesome README](https://github.com/matiassingers/awesome-readme)
