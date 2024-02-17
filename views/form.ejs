@@ -31,7 +31,7 @@
   <div style="text-align: center;margin-top: 4px;margin-bottom: 4px;">
     <a id="link" href="http://go/<%= defaults.value %>" class="button">Sample&#128279;: go/<%= defaults.value %></a>
   </div>
-  <form method="POST" action="/action/insert">
+  <form id="urlForm" method="POST" action="/action/insert">
 
     <label for="dropdown"><i class="fa fa-list-dots"></i> Category</label>
     <select name="dropdown" id="dropdown">
@@ -46,9 +46,6 @@
     <input type="text" name="key" id="key" value="<%= defaults.value %>" required>
     <label for="url"> <i class="fa fa-link"></i> URL</label>
     <input type="url" name="url" id="url" value="" required><br>
-
-
-
     <button type="submit">Submit</button>
   </form>
 </body>
@@ -58,6 +55,38 @@
   var dropdown = document.getElementById('dropdown');
   var customValue = document.getElementById('customValue');
 
+  document.getElementById("urlForm").addEventListener("submit", function (event) {
+    console.log("Form submission event listener triggered.");
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    // Serialize form data
+    const formData = new FormData(event.target);
+
+    // Send a POST request using fetch
+    fetch("/action/insert", {
+      method: "POST",
+      body: formData
+    })
+      .then(response => {
+        // Check if the response is successful
+        if (!response.ok) {
+          // If response is not successful, throw an error
+          throw new Error("Failed to submit form. Status: " + response.status);
+        }
+        // If response is successful, return the response data
+        return response.json(); // Assuming response is JSON
+      })
+      .then(data => {
+        // Handle successful response here if needed
+        // For example, redirect to another page or display a success message
+        console.log("Form submitted successfully:", data);
+      })
+      .catch(error => {
+        // Handle errors
+        console.error("An error occurred:", error);
+        alert("An error occurred while submitting the form: " + error.message);
+      });
+  });
   // Show the custom value input field when the "Custom" option is selected
   dropdown.addEventListener('change', function () {
     if (dropdown.value.includes('Custom')) {
