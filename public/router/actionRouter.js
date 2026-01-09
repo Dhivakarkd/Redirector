@@ -72,7 +72,7 @@ router.post("/insert", (req, res) => {
     customvalue: req.body.customValue,
   };
 
-  if (validator.isURL(UrlPath) && !isNullOrEmpty(keyName)) {
+  if (validator.isURL(UrlPath, { require_protocol: true }) && !isNullOrEmpty(keyName)) {
     logger.info(UrlPath);
 
     dbUtils
@@ -92,14 +92,31 @@ router.post("/insert", (req, res) => {
         res.status(500).send("Internal Server Error");
       });
   } else {
-    const encodedKeyName = escape(keyName);
-    const encodedUrlPath = escape(UrlPath);
+    // If validation fails, re-render the form with an error message?
+    // Or send a better error page. The prompt asked for validation.
+    // Ideally we should render the form again with the error.
+    // But since `res.render("form")` requires `defaults` with dropdowns etc.,
+    // and those come from `categoryCache`, I need to require it or move logic.
+    // For now, I will send a clear 400 error page or message.
 
-    res
-      .status(400)
-      .send(
-        `Bad Request - key : '${encodedKeyName}'/ Value : '${encodedUrlPath}'`
-      );
+    // Better: redirect back to home with an error query param?
+    // Or render a simple error view.
+
+    res.status(400).send(`
+      <html>
+        <head>
+          <title>Validation Error</title>
+           <script src="https://cdn.tailwindcss.com"></script>
+        </head>
+        <body class="bg-gray-100 flex items-center justify-center h-screen">
+          <div class="bg-white p-8 rounded shadow-lg text-center">
+            <h1 class="text-2xl font-bold text-red-600 mb-4">Validation Error</h1>
+            <p class="mb-4">Invalid URL or Key. Please ensure URL starts with http:// or https:// and Key is not empty.</p>
+            <a href="/view/home" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Go Back</a>
+          </div>
+        </body>
+      </html>
+    `);
   }
 });
 

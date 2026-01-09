@@ -1,43 +1,135 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Settings</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <link rel="stylesheet" href="/css/Header.css">
-    <link rel="stylesheet" href="/css/setting.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
 </head>
 
-<body>
-    <header class="header">
-        <div class="home-lab-index">
-            <h1>
-                <a href="http://go/"><i class="fa fa-home"></i></a> Home Lab Index
-            </h1>
-        </div>
-        <div class=" btn-container">
-            <button onclick="window.location.href='/view/home'">Add Link</button>
-            <button onclick="window.location.href='/view/indexes'">Indexes</button>
-            <button onclick="window.location.href='/view/setting'">Settings</button>
-        </div>
-    </header>
-    <h1> <i class="fas fa-tools"></i> Settings</h1>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col font-sans transition-colors duration-300">
 
+  <!-- Header -->
+  <header class="bg-white dark:bg-gray-800 shadow-md py-4">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+      <div class="text-2xl font-bold mb-4 md:mb-0">
+        <a href="http://go/" class="flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400">
+          <i class="fa fa-home"></i> Home Lab Index
+        </a>
+      </div>
+      <div class="flex flex-wrap gap-2 justify-center">
+        <button id="modeToggleBtn" onclick="toggleNightMode()" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+           Night Mode
+        </button>
+        <a href="/view/home" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition">Add Link</a>
+        <a href="/view/indexes" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition">Indexes</a>
+        <a href="/view/setting" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Settings</a>
+      </div>
+    </div>
+  </header>
 
-    <div class="container">
-        <button onclick="importdata()" class="import">Import</button>
-        <form method="post" action="/action/export">
-            <button type="submit" class="export">Export</button>
-        </form>
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center">
+
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-lg">
+      <h2 class="text-2xl font-bold mb-6 border-b pb-2 border-gray-200 dark:border-gray-700">User Settings</h2>
+
+      <div class="space-y-6">
+        <div>
+          <label class="block text-sm font-medium mb-1">Name</label>
+          <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600">
+             <%= userSettings.name %>
+          </div>
+        </div>
+
+        <div>
+           <label class="block text-sm font-medium mb-1">Email</label>
+           <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600">
+             <%= userSettings.email %>
+           </div>
+        </div>
+
+        <div>
+           <label class="block text-sm font-medium mb-1">Notifications</label>
+           <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600">
+             <%= userSettings.notifications ? 'Enabled' : 'Disabled' %>
+           </div>
+        </div>
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <h3 class="text-xl font-bold mb-4">Export/Import Data</h3>
+
+          <div class="grid grid-cols-1 gap-4">
+              <form action="/action/export" method="POST">
+                  <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+                      <i class="fa fa-download mr-2"></i> Export Data
+                  </button>
+              </form>
+
+              <form id="importForm" action="/action/import" method="POST" enctype="multipart/form-data" class="flex flex-col gap-2">
+                  <label class="block text-sm font-medium">Import Data (JSON)</label>
+                  <input type="file" name="file" accept=".json" required class="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100
+                  "/>
+                  <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">
+                      <i class="fa fa-upload mr-2"></i> Import Data
+                  </button>
+              </form>
+          </div>
+      </div>
+
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/js/settingHelper.js">
+  </main>
 
-    </script>
+  <script>
+    // Night Mode Logic (Consistent across pages)
+    var modeToggleBtn = document.getElementById('modeToggleBtn');
+    var htmlElement = document.documentElement;
+
+    function toggleNightMode() {
+      htmlElement.classList.toggle('dark');
+      const isDark = htmlElement.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateButtonText();
+    }
+
+    function updateButtonText() {
+       if (htmlElement.classList.contains('dark')) {
+        modeToggleBtn.textContent = 'Day Mode';
+      } else {
+        modeToggleBtn.textContent = 'Night Mode';
+      }
+    }
+
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      htmlElement.classList.add('dark');
+    } else {
+      htmlElement.classList.remove('dark');
+    }
+    updateButtonText();
+
+    // Import form handler (optional success message)
+    document.getElementById('importForm').addEventListener('submit', function(e) {
+        // e.preventDefault(); // If you want to handle via fetch
+        // For now, let it submit normally, but maybe show alert?
+        // The server returns 200 OK on success, but doesn't render a page.
+        // It might be better to handle this via fetch to show a swal or alert.
+    });
+  </script>
 
 </body>
-
 
 </html>

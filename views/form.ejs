@@ -1,96 +1,188 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home Lab Index</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
-  <link rel="stylesheet" href="/css/Header.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/night.css">
-
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
 </head>
 
-<body>
-  <header class="header">
-    <div class="home-lab-index">
-      <h1>
-        <a href="http://go/"><i class="fa fa-home"></i></a> Home Lab Index
-      </h1>
-    </div>
-    <div class="btn-container">
-      <button id="modeToggleBtn" onclick="toggleNightMode()">Night Mode</button>
-      <button onclick="window.location.href='/view/home'">Add Link</button>
-      <button onclick="window.location.href='/view/indexes'">Indexes</button>
-      <button onclick="window.location.href='/view/setting'">Settings</button>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col font-sans transition-colors duration-300">
+
+  <!-- Header -->
+  <header class="bg-white dark:bg-gray-800 shadow-md py-4">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+      <div class="text-2xl font-bold mb-4 md:mb-0">
+        <a href="http://go/" class="flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400">
+          <i class="fa fa-home"></i> Home Lab Index
+        </a>
+      </div>
+      <div class="flex flex-wrap gap-2 justify-center">
+        <button id="modeToggleBtn" onclick="toggleNightMode()" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+          Night Mode
+        </button>
+        <a href="/view/home" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Add Link</a>
+        <a href="/view/indexes" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition">Indexes</a>
+        <a href="/view/setting" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition">Settings</a>
+      </div>
     </div>
   </header>
-  <div class="description">
-    <h2> <i class="fa fa-plus-circle"></i> Add your URLs for Quick Access</h2>
-  </div>
 
-  <div style="text-align: center;margin-top: 4px;margin-bottom: 4px;">
-    <a id="link" href="http://go/<%= defaults.value %>" class="button">Sample&#128279;: go/<%= defaults.value %></a>
-  </div>
-  <form id="urlForm" method="POST" action="/action/insert">
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center">
 
-    <label for="dropdown"><i class="fa fa-list-dots"></i> Category</label>
-    <select name="dropdown" id="dropdown">
-      <% for(var i=0; i<defaults.dropdownValues.length; i++) { %>
-        <option value="<%= defaults.dropdownValues[i] %>">
-          <%= defaults.dropdownValues[i] %>
-        </option>
-        <% } %>
-    </select>
-    <input type="text" name="customValue" id="customValue" placeholder="Enter Custom Category" style="display: none;">
-    <label for="key"> <i class="fa fa-key"></i> Key</label>
-    <input type="text" name="key" id="key" value="<%= defaults.value %>" required>
-    <label for="url"> <i class="fa fa-link"></i> URL</label>
-    <input type="url" name="url" id="url" value="" required><br>
-    <button type="submit">Submit</button>
-  </form>
-</body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-<script>
-  var dropdown = document.getElementById('dropdown');
-  var customValue = document.getElementById('customValue');
+    <div class="text-center mb-8">
+      <h2 class="text-2xl font-semibold flex items-center justify-center gap-2">
+        <i class="fa fa-plus-circle text-blue-500"></i> Add your URLs for Quick Access
+      </h2>
+    </div>
 
-  function toggleNightMode() {
+    <!-- Sample Link Preview -->
+    <div class="mb-6 w-full max-w-md text-center">
+      <a id="link" href="http://go/<%= defaults.value %>" class="inline-block px-6 py-3 bg-indigo-600 text-white font-medium rounded shadow hover:bg-indigo-700 transition w-full truncate">
+        Sample&#128279;: go/<%= defaults.value %>
+      </a>
+    </div>
 
-    var body = document.body;
+    <!-- Form -->
+    <div class="w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+      <form id="urlForm" method="POST" action="/action/insert" class="space-y-6" novalidate>
+
+        <!-- Category -->
+        <div>
+          <label for="dropdown" class="block text-sm font-medium mb-2">
+            <i class="fa fa-list-dots mr-1"></i> Category
+          </label>
+          <select name="dropdown" id="dropdown" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+            <% for(var i=0; i<defaults.dropdownValues.length; i++) { %>
+              <option value="<%= defaults.dropdownValues[i] %>">
+                <%= defaults.dropdownValues[i] %>
+              </option>
+            <% } %>
+          </select>
+        </div>
+
+        <!-- Custom Category Input -->
+        <div id="customValueContainer" class="hidden">
+          <input type="text" name="customValue" id="customValue" placeholder="Enter Custom Category" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+        </div>
+
+        <!-- Key -->
+        <div>
+          <label for="key" class="block text-sm font-medium mb-2">
+            <i class="fa fa-key mr-1"></i> Key
+          </label>
+          <input type="text" name="key" id="key" value="<%= defaults.value %>" required class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+        </div>
+
+        <!-- URL -->
+        <div>
+          <label for="url" class="block text-sm font-medium mb-2">
+            <i class="fa fa-link mr-1"></i> URL
+          </label>
+          <input type="url" name="url" id="url" value="" required placeholder="https://example.com" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+          <p class="text-xs text-red-500 mt-1 hidden" id="urlError">Please enter a valid URL including http:// or https://</p>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full py-3 bg-green-600 text-white font-bold rounded hover:bg-green-700 transition duration-300 transform hover:scale-[1.02]">
+          Submit
+        </button>
+
+      </form>
+    </div>
+
+  </main>
+
+  <script>
+    var dropdown = document.getElementById('dropdown');
+    var customValue = document.getElementById('customValue');
+    var customValueContainer = document.getElementById('customValueContainer');
     var modeToggleBtn = document.getElementById('modeToggleBtn');
+    var htmlElement = document.documentElement;
 
-    body.classList.toggle('night-mode');
+    function toggleNightMode() {
+      htmlElement.classList.toggle('dark');
 
-    // Toggle button text
-    if (body.classList.contains('night-mode')) {
-      modeToggleBtn.textContent = 'Day Mode';
-    } else {
-      modeToggleBtn.textContent = 'Night Mode';
+      // Save preference (optional, using localStorage)
+      const isDark = htmlElement.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+      updateButtonText();
     }
-  }
 
-  // Show the custom value input field when the "Custom" option is selected
-  dropdown.addEventListener('change', function () {
-    if (dropdown.value.includes('Custom')) {
-      customValue.style.display = 'block';
-      customValue.setAttribute('required', '');
-    } else {
-      customValue.style.display = 'none';
-      customValue.removeAttribute('required');
+    function updateButtonText() {
+       if (htmlElement.classList.contains('dark')) {
+        modeToggleBtn.textContent = 'Day Mode';
+      } else {
+        modeToggleBtn.textContent = 'Night Mode';
+      }
     }
-  });
 
-  const keyInput = document.getElementById('key');
-  const link = document.getElementById('link');
+    // Initialize theme based on preference or system
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      htmlElement.classList.add('dark');
+    } else {
+      htmlElement.classList.remove('dark');
+    }
+    updateButtonText();
 
-  keyInput.addEventListener('input', (event) => {
-    const newValue = event.target.value;
-    link.href = `http://go/${encodeURIComponent(newValue)}`;
-    link.innerText = `Sample\u{1F517}: go/${newValue}`;
-  });
-</script>
+    // Show the custom value input field when the "Custom" option is selected
+    function checkCustomValue() {
+      if (dropdown.value.includes('Custom')) {
+        customValueContainer.classList.remove('hidden');
+        customValue.setAttribute('required', '');
+      } else {
+        customValueContainer.classList.add('hidden');
+        customValue.removeAttribute('required');
+      }
+    }
 
+    dropdown.addEventListener('change', checkCustomValue);
+    // Run on load in case it's pre-selected
+    checkCustomValue();
+
+
+    const keyInput = document.getElementById('key');
+    const link = document.getElementById('link');
+
+    keyInput.addEventListener('input', (event) => {
+      const newValue = event.target.value;
+      if(newValue) {
+          link.href = `http://go/${encodeURIComponent(newValue)}`;
+          link.innerText = `Sample\u{1F517}: go/${newValue}`;
+      } else {
+          link.innerText = `Sample\u{1F517}: go/`;
+      }
+    });
+
+    // Client-side validation for URL
+    const urlInput = document.getElementById('url');
+    const urlForm = document.getElementById('urlForm');
+    const urlError = document.getElementById('urlError');
+
+    urlInput.addEventListener('input', () => {
+        if(urlInput.validity.valid) {
+             urlError.classList.add('hidden');
+             urlInput.classList.remove('border-red-500');
+        }
+    });
+
+    urlForm.addEventListener('submit', (e) => {
+        if (!urlInput.validity.valid) {
+            e.preventDefault();
+            urlError.classList.remove('hidden');
+            urlInput.classList.add('border-red-500');
+        }
+    });
+
+  </script>
+</body>
 </html>

@@ -62,12 +62,8 @@ app.get("/:value", apiLimiter, (req, res) => {
         res.set("Pragma", "no-cache");
         res.redirect(301, url.url);
       } else {
-        const defaults = {
-          value: req.params.value,
-          dropdownValues: categoryCache(),
-        };
-        logger.info(defaults);
-        res.render("form", { defaults });
+        logger.warn(`Key not found: ${req.params.value}`);
+        res.status(404).render("404");
       }
     })
     .catch((err) => {
