@@ -8,6 +8,10 @@ let selectedCategory;
 function updatePaginationControls(totalPages) {
   const paginationSpan = document.getElementById("currentPage");
   paginationSpan.textContent = `Page ${currentPage} of ${totalPages}`;
+
+  // Optional: Disable buttons based on page
+  document.getElementById("prevPage").disabled = currentPage === 1;
+  document.getElementById("nextPage").disabled = currentPage === totalPages || totalPages === 0;
 }
 
 // Function to handle fetching data for the current page and updating the table
@@ -20,57 +24,65 @@ function fetchDataAndUpdateTable(category, page) {
     .then((data) => {
       console.log(data);
       const table = document.getElementById("url-table");
+      const tbody = table.querySelector("tbody"); // Get tbody
       const paginationContainer = document.getElementById("pagination");
 
-      // Clear the existing rows from the table
-      while (table.rows.length > 1) {
-        table.deleteRow(1);
-      }
+      // Clear the existing rows from the tbody (not the whole table, to keep header)
+      tbody.innerHTML = '';
 
       console.log("Data length is ", data.urls.length);
 
       if (data.urls.length === 0) {
         // If no URLs found, display a message
-        const noUrlsRow = table.insertRow();
+        const noUrlsRow = tbody.insertRow();
         const cell = noUrlsRow.insertCell();
-        cell.colSpan = "4"; // Set the colspan to match the number of columns in your table
+        cell.colSpan = "4";
         cell.textContent = "No URLs found";
-        cell.style.textAlign = "center";
+        cell.className = "p-4 text-center text-gray-500 italic"; // Tailwind classes
 
-        // Hide pagination container
-        paginationContainer.style.display = "none";
+        // Hide pagination container? Or just disable? Let's hide if empty or 0 pages.
+        // But if we are on page 1 and no results, hiding is fine.
+        if(page === 1) paginationContainer.style.display = "none";
       } else {
         // Loop through the data and add new rows to the table
         data.urls.forEach((row) => {
-          const newRow = table.insertRow();
+          const newRow = tbody.insertRow();
           newRow.id = `row-${row.id}`;
+          newRow.className = "hover:bg-gray-100 dark:hover:bg-gray-700 transition";
 
           const keyCell = newRow.insertCell();
           keyCell.textContent = row.key;
+          keyCell.className = "p-4 border-b border-gray-200 dark:border-gray-700";
 
           const urlCell = newRow.insertCell();
           urlCell.textContent = row.url;
+          urlCell.className = "p-4 border-b border-gray-200 dark:border-gray-700 truncate max-w-xs"; // Truncate long URLs
 
           const categoryCell = newRow.insertCell();
           categoryCell.textContent = row.category;
+          categoryCell.className = "p-4 border-b border-gray-200 dark:border-gray-700";
 
           // Add delete button cell
           const deleteCell = newRow.insertCell();
+          deleteCell.className = "p-4 border-b border-gray-200 dark:border-gray-700";
           const deleteButton = document.createElement("button");
-          deleteButton.textContent = "Delete";
+          deleteButton.innerHTML = '<i class="fa fa-trash"></i> Delete';
+          deleteButton.className = "px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition";
           deleteButton.addEventListener("click", () => {
             console.log("row id is ", row.id);
-            deleteUrl(row.id); // Call the deleteUrl function with the ID of the row
+            deleteUrl(row.id);
           });
           deleteCell.appendChild(deleteButton);
 
           // Show pagination container
-          paginationContainer.style.display = "block";
+          paginationContainer.style.display = "flex";
         });
       }
 
       // Update pagination controls
       totalPages = Math.ceil(data.totalCount / itemsPerPage);
+      // Handle case where totalCount is 0
+      if(totalPages === 0) totalPages = 1;
       updatePaginationControls(totalPages);
     })
 
@@ -107,6 +119,9 @@ function deleteUrl(id) {
           const rowToRemove = document.getElementById(`row-${id}`);
           if (rowToRemove) {
             rowToRemove.remove();
+             // Reload table to update pagination if needed, or just remove row.
+             // Reloading is safer for pagination consistency.
+             fetchDataAndUpdateTable(selectedCategory, currentPage);
           } else {
             console.warn("Failed to find the table row to remove");
           }
